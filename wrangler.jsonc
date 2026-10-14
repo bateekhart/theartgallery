@@ -1,0 +1,10 @@
+// Cloudflare Worker that serves this folder as a static site.
+// "name" must match the Worker in the Cloudflare dashboard.
+{
+  "name": "theartgallery1",
+  "compatibility_date": "2026-10-13",
+  "assets": {
+    "directory": "./",
+    "not_found_handling": "404-page"
+  }
+}
