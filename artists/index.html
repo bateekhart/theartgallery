@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Artists — the ART GALLERY</title>
+  <meta name="description" content="The artists who have shown with the ART GALLERY.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+  <link rel="alternate" hreflang="en" href="https://theartgallery.world/artists/">
+  <link rel="alternate" hreflang="ar" href="https://theartgallery.world/ar/artists/">
+  <meta property="og:title" content="Artists — the ART GALLERY">
+  <meta property="og:description" content="The artists who have shown with the ART GALLERY.">
+  <meta property="og:image" content="https://theartgallery.world/assets/img/hero-stairwell.jpg">
+  <meta property="og:url" content="https://theartgallery.world/artists/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500&family=Urbanist:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body data-page="artists" data-base="../" data-path="artists/">
+
+<header id="site-header"></header>
+
+<main id="main">
+  <section class="page-head">
+    <div class="wrap">
+      <div class="artists-head">
+        <div class="reveal">
+          <p class="eyebrow"><span class="level">Artists</span></p>
+          <h1 class="display">Artists from all<span>walks of life.</span></h1>
+          <p class="lede"><b class="hl" data-count="artists">—</b> artists have shown with us. Select a name for their page; the numbers are the exhibitions they took part in.</p>
+        </div>
+        <label class="search reveal"><span class="visually-hidden">Search artists</span><input id="artist-search" type="search" placeholder="Search artists" autocomplete="off"></label>
+      </div>
+    </div>
+  </section>
+  <section class="section tight" style="padding-top:0">
+    <div class="wrap">
+      <nav class="az-letters" id="az-letters" aria-label="A–Z"></nav>
+      <div class="az" id="az"></div>
+      <p class="empty" id="artist-empty" hidden>No artist matches that name.</p>
+    </div>
+  </section>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/data.js"></script>
+<script src="../assets/works.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>
