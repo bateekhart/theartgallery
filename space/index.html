@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>View in your space — the ART GALLERY</title>
+  <meta name="description" content="Add a photo of your wall, choose an artwork and see it at its real size in your space, then request to buy it from anywhere in the world.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+  <link rel="alternate" hreflang="en" href="https://theartgallery.world/space/">
+  <link rel="alternate" hreflang="ar" href="https://theartgallery.world/ar/space/">
+  <meta property="og:title" content="View in your space — the ART GALLERY">
+  <meta property="og:description" content="Add a photo of your wall, choose an artwork and see it at its real size in your space, then request to buy it from anywhere in the world.">
+  <meta property="og:image" content="https://theartgallery.world/assets/img/hero-stairwell.jpg">
+  <meta property="og:url" content="https://theartgallery.world/space/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500&family=Urbanist:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body data-page="space" data-base="../" data-path="space/">
+
+<header id="site-header"></header>
+
+<main id="main">
+  <section class="page-head space-head">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow"><span class="level">View in your space</span></p>
+        <h1 class="display">Your wall,<span><em>our art.</em></span></h1>
+        <p class="lede">Add a photo of your wall, choose a piece and see it at its real size. Love it? Send us a request and we ship anywhere in the world.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight space" style="padding-top:0">
+    <div class="wrap space-grid">
+      <div class="stage-col">
+        <div class="stage-wrap" id="stage-wrap"><canvas id="stage" aria-label="Preview of the artwork in your space"></canvas></div>
+        <p class="stage-hint" id="stage-hint" aria-live="polite"></p>
+        <div class="picked" id="picked"></div>
+      </div>
+
+      <div class="panel">
+        <section class="step">
+          <h2><span>01</span> Your space</h2>
+          <div class="row">
+            <label class="btn" for="room-file"><span id="room-label">Add a photo of your wall</span></label>
+            <input id="room-file" type="file" accept="image/*" hidden>
+            <button class="btn ghost" id="use-sample" type="button">Sample room</button>
+          </div>
+          <p class="small">Stand straight in front of the wall. Your photo stays on your device; nothing is uploaded.</p>
+        </section>
+
+        <section class="step" id="step-scale">
+          <h2><span>02</span> Set the scale</h2>
+          <div class="row">
+            <label class="field">The orange line is <input id="line-cm" type="number" min="1" step="any" value="175" inputmode="decimal"> cm</label>
+            <button class="btn ghost small-btn" id="measure-btn" type="button" aria-pressed="false">Adjust the line</button>
+          </div>
+          <p class="small">Lay the line over something you know: a door is about 80–90 cm wide, an A4 sheet 29.7 cm, a light switch about 8 cm. <b id="wall-size"></b></p>
+        </section>
+
+        <section class="step">
+          <h2><span>03</span> Choose an artwork <em id="pick-count"></em></h2>
+          <div class="row">
+            <label class="select"><span class="visually-hidden">Exhibition</span><select id="pick-ex"></select></label>
+            <label class="search"><span class="visually-hidden">Search</span><input id="pick-q" type="search" placeholder="Search by artist or title" autocomplete="off"></label>
+          </div>
+          <ul class="pick-grid" id="pick-grid"></ul>
+        </section>
+
+        <section class="step" id="tune" hidden>
+          <h2><span>04</span> Fine-tune</h2>
+          <div class="row">
+            <label class="field">Width <input id="w-cm" type="number" min="1" step="any" inputmode="decimal"></label>
+            <label class="field">Height <input id="h-cm" type="number" min="1" step="any" inputmode="decimal"> cm</label>
+            <button class="btn ghost small-btn" id="swap" type="button">⇄ Swap</button>
+          </div>
+          <div class="row chips" id="frames" role="group" aria-label="Frame">
+            <span class="lbl">Frame</span>
+            <button type="button" data-frame="none" aria-pressed="false">None</button>
+            <button type="button" data-frame="black" aria-pressed="true">Black</button>
+            <button type="button" data-frame="white" aria-pressed="false">White</button>
+            <button type="button" data-frame="oak" aria-pressed="false">Oak</button>
+          </div>
+          <div class="row">
+            <label class="check"><input id="mat" type="checkbox"> White mat</label>
+            <label class="field range">Light <input id="light" type="range" min=".6" max="1.15" step=".01" value="1"></label>
+          </div>
+        </section>
+
+        <section class="step" id="buy" hidden>
+          <h2><span>05</span> Make it yours</h2>
+          <div class="row">
+            <button class="btn ghost" id="dl" type="button">Download image</button>
+            <button class="btn ghost" id="share" type="button" hidden>Share</button>
+            <button class="btn buy" id="req-toggle" type="button">Request to purchase <span class="arrow">→</span></button>
+          </div>
+          <form class="req" id="req" hidden>
+            <label>Your name<input id="req-name" required autocomplete="name"></label>
+            <label>Country & city<input id="req-country" required autocomplete="country-name"></label>
+            <label>Notes (optional)<textarea id="req-notes" rows="3"></textarea></label>
+            <p class="small">We confirm price, availability and shipping anywhere in the world by email. Attach the image you downloaded so we can see your space.</p>
+            <button class="btn" type="submit">Send request by email <span class="arrow">→</span></button>
+          </form>
+        </section>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../assets/data.js"></script>
+<script src="../assets/works.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

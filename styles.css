@@ -589,7 +589,7 @@ body.lb-open { overflow: hidden; }
   .tlist { columns: 1; }
   .slide-info { padding-bottom: 4px; }
 }
-@media (max-width: 860px) {
+@media (max-width: 1080px) {
   .nav {
     position: fixed; inset: 76px 0 auto 0; flex-direction: column; align-items: flex-start; gap: 0;
     background: var(--wall); border-bottom: 1px solid var(--line); padding: 8px var(--gutter) 24px;
@@ -642,3 +642,64 @@ body.lb-open { overflow: hidden; }
 .about-hero .founder-portrait .steps i:nth-child(3) { margin-inline-start: 30%; }
 html, body { overflow-x: clip; }
 .a-portrait.is-small { width: 168px; }
+
+/* ---------- View in your space */
+.space-head { padding-bottom: clamp(24px, 3vw, 40px); }
+.space-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(320px, 1fr); gap: clamp(20px, 3vw, 44px); align-items: start; }
+.stage-col { position: sticky; top: 92px; }
+.stage-wrap { width: 100%; display: grid; place-items: center; background: #e4e1dc; }
+#stage { display: block; touch-action: none; user-select: none; -webkit-user-select: none; }
+.stage-hint { font-size: 14px; color: var(--muted); margin-top: 10px; min-height: 1.4em; }
+.picked { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; margin-top: 8px; }
+.picked:empty { display: none; }
+.picked a { text-decoration: none; font-family: "Urbanist", sans-serif; }
+.picked a:hover { color: var(--orange); }
+.picked .t { font-size: 20px; font-weight: 300; }
+.picked .m { font-size: 13px; color: var(--muted); }
+.picked .x { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.picked .av { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--orange); border: 1px solid var(--orange); padding: 1px 7px; }
+:lang(ar) .picked .x, :lang(ar) .picked .av { letter-spacing: 0; font-size: 14px; }
+.panel { display: grid; gap: 0; }
+.step { border-top: 1px solid var(--ink); padding: 18px 0 24px; }
+.step h2 { font-weight: 300; font-size: 24px; display: flex; gap: 12px; align-items: baseline; margin-bottom: 14px; }
+.step h2 span { font-size: 12px; font-weight: 600; letter-spacing: .14em; color: var(--orange); }
+.step h2 em { font-style: normal; font-size: 13px; color: var(--muted); margin-inline-start: auto; }
+.step .row { display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: center; margin-bottom: 12px; }
+.step .small, .small { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+.small b { color: var(--ink); font-weight: 600; display: block; margin-top: 6px; }
+.step label.btn { cursor: pointer; }
+.small-btn { padding: 9px 14px; font-size: 12px; }
+.small-btn[aria-pressed="true"] { background: var(--orange); border-color: var(--orange); color: var(--ink); }
+.field { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; }
+.field input[type="number"] { width: 84px; font: inherit; padding: 8px 10px; border: 1px solid var(--ink); background: var(--white); border-radius: 0; }
+.field.range input { accent-color: var(--orange); width: 140px; }
+.check { display: inline-flex; gap: 8px; align-items: center; font-size: 15px; cursor: pointer; }
+.check input { accent-color: var(--orange); width: 18px; height: 18px; }
+.step .search { width: auto; flex: 1; min-width: 160px; }
+.step .search input { padding: 8px 0 6px; font-size: 16px; }
+.step .select select { max-width: 220px; }
+.step .chips { overflow: visible; flex-wrap: wrap; }
+.step .chips .lbl { font-size: 15px; margin-inline-end: 4px; }
+.step .chips button { padding: 6px 12px; }
+.pick-grid { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; max-height: 360px; overflow-y: auto; padding: 2px 4px 2px 2px; scrollbar-width: thin; scrollbar-color: var(--orange) transparent; }
+.pick-grid button { display: grid; width: 100%; padding: 0; border: 2px solid transparent; background: none; cursor: pointer; text-align: start; }
+.pick-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #e6e6e6; transition: opacity .2s; }
+.pick-grid button:hover img { opacity: .8; }
+.pick-grid span { font-family: "Urbanist", sans-serif; font-size: 11.5px; line-height: 1.3; padding: 4px 2px 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--graphite); }
+.pick-grid [aria-pressed="true"] { border-color: var(--orange); }
+.pick-grid .empty { grid-column: 1 / -1; }
+.btn.buy { background: var(--orange); border-color: var(--orange); color: var(--ink); }
+.btn.buy:hover { background: var(--ink); border-color: var(--ink); color: var(--wall); }
+.req { display: grid; gap: 12px; margin-top: 8px; padding: 18px; background: var(--white); }
+.req label { display: grid; gap: 4px; font-size: 14px; color: var(--muted); }
+.req input, .req textarea { font: inherit; font-size: 16px; color: var(--ink); padding: 10px 12px; border: 1px solid var(--line); background: var(--wall); border-radius: 0; }
+.req input:focus, .req textarea:focus { outline: 2px solid var(--orange); outline-offset: 0; border-color: transparent; }
+.req .btn { justify-self: start; }
+.lb-space { margin-inline-start: 6px; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--orange); color: var(--orange) !important; padding: 4px 10px; }
+:lang(ar) .lb-space { letter-spacing: 0; font-size: 14px; }
+.lb-space:hover { background: var(--orange); color: var(--ink) !important; }
+@media (max-width: 960px) {
+  .space-grid { grid-template-columns: 1fr; }
+  .stage-col { position: sticky; top: 0; z-index: 5; background: var(--wall); padding-top: 8px; }
+  .pick-grid { max-height: 280px; }
+}

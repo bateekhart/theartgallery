@@ -34,7 +34,7 @@
     notFound: 'لم نجد هذه الصفحة.', backTo: 'العودة إلى', cm: 'سم', of: 'من', shown: 'معروضة', more: 'عرض المزيد',
     keyVisual: 'الهوية البصرية لمعرض', photoOf: 'صورة', portraitOf: 'صورة', curated: 'تنسيق', hostedLabel: 'معرض مستضاف',
     beyond: 'خارج الجاليري', email: 'البريد', instagram: 'إنستجرام', rights: 'ذا آرت جاليري', view: 'عرض', slide: 'شريحة',
-    pause: 'إيقاف', play: 'تشغيل', exhibition: 'المعرض', artist: 'الفنان', count: 'عدد', years: 'السنوات'
+    pause: 'إيقاف', play: 'تشغيل', exhibition: 'المعرض', artist: 'الفنان', count: 'عدد', years: 'السنوات', space: 'شاهدها في مساحتك'
   } : {
     home: 'Home', exhibitions: 'Exhibitions', artworks: 'Artworks', artists: 'Artists', about: 'About', work: 'Work with us',
     lang: 'عربي', langCode: 'ar', menu: 'Open menu', close: 'Close', prev: 'Previous', next: 'Next',
@@ -46,7 +46,7 @@
     notFound: "We couldn't find that page.", backTo: 'Back to', cm: 'cm', of: 'of', shown: 'shown', more: 'Show more',
     keyVisual: 'Key visual for', photoOf: 'Photo of', portraitOf: 'Portrait of', curated: 'Curated', hostedLabel: 'Hosted exhibition',
     beyond: 'Beyond the gallery', email: 'Email', instagram: 'Instagram', rights: 'the ART GALLERY', view: 'View', slide: 'Slide',
-    pause: 'Pause', play: 'Play', exhibition: 'Exhibition', artist: 'Artist', count: 'Count', years: 'Years'
+    pause: 'Pause', play: 'Play', exhibition: 'Exhibition', artist: 'Artist', count: 'Count', years: 'Years', space: 'View in your space'
   };
 
   // ---------- Helpers
@@ -69,7 +69,8 @@
   const url = {
     home: ROOT, about: ROOT + 'about/', exhibitions: ROOT + 'exhibitions/', artists: ROOT + 'artists/',
     ex: id => `${ROOT}exhibition/?id=${id}`, artist: name => `${ROOT}artist/?a=${slug(name)}`,
-    artworks: id => ROOT + 'artworks/' + (id ? `?ex=${id}` : ''), work: ROOT + '#work'
+    artworks: id => ROOT + 'artworks/' + (id ? `?ex=${id}` : ''), work: ROOT + '#work',
+    space: w => ROOT + 'space/' + (w ? `?w=${w.ex}.${w.i}` : '')
   };
   const img = (p, w) => BASE + p;
   const workSrc = (f, thumb) => `${BASE}assets/img/works/${thumb ? 't/' : ''}${f}.jpg`;
@@ -102,12 +103,20 @@
   const countWorks = rows => rows.reduce((m, w) => m + (parseInt((String(w.notes).match(/(\d+) works/) || [])[1]) || 1), 0);
   const withImg = ALL.filter(w => w.imgs.length);
   const meta = w => [fmtSize(w.size), w.year, w.medium].filter(Boolean).map(esc).join(' · ');
+  // real size in cm for wall pieces: two numbers (a third, if any, is a small depth)
+  const dims = w => {
+    if (!w.imgs.length || /\bh\b|variable/i.test(w.size)) return null;
+    const n = (w.size.split('/')[0].match(/\d+(?:\.\d+)?/g) || []).map(Number);
+    if (n.length < 2 || (n.length === 3 && n[2] > 6) || n.length > 3) return null;
+    const [a, b] = n, im = w.imgs[0], r = im.w / im.h;
+    return Math.abs(a / b - r) <= Math.abs(b / a - r) ? { w: a, h: b } : { w: b, h: a };
+  };
 
   // ---------- Header & footer
   const navItems = [
-    ['exhibitions', url.exhibitions], ['artworks', url.artworks()], ['artists', url.artists], ['about', url.about]
+    ['exhibitions', url.exhibitions], ['artworks', url.artworks()], ['artists', url.artists], ['about', url.about], ['space', url.space()]
   ];
-  const active = { exhibitions: ['exhibitions', 'exhibition'], artworks: ['artworks'], artists: ['artists', 'artist'], about: ['about'] };
+  const active = { exhibitions: ['exhibitions', 'exhibition'], artworks: ['artworks'], artists: ['artists', 'artist'], about: ['about'], space: ['space'] };
   const header = $('#site-header');
   if (header) {
     header.className = 'site-header';
@@ -214,7 +223,8 @@
     return `${withArtist ? `<a class="lb-artist" href="${url.artist(w.artist)}" dir="ltr">${esc(w.artist)}</a>` : ''}
       <span class="lb-title" dir="auto">${esc(w.title)}</span>
       ${meta(w) ? `<span class="lb-meta" dir="auto">${meta(w)}</span>` : ''}
-      ${withEx && e ? `<a class="lb-ex" href="${url.ex(e.id)}">${esc(L(e, 'title'))} · ${num(e.year)}</a>` : ''}`;
+      ${withEx && e ? `<a class="lb-ex" href="${url.ex(e.id)}">${esc(L(e, 'title'))} · ${num(e.year)}</a>` : ''}
+      ${dims(w) ? `<a class="lb-space" href="${url.space(w)}">${T.space} <span aria-hidden="true">${AR ? '←' : '→'}</span></a>` : ''}`;
   };
   // flatten works into viewer slides (every photo of every work)
   const slidesFor = (works, opts = {}) => {
@@ -688,6 +698,241 @@
       </nav>`;
     $$('.masonry[data-ex]', main).forEach(ul => renderWorks(ul, works.filter(w => w.ex === ul.dataset.ex), { artist: false, ex: false, page: 200 }));
     revealIn(main);
+  };
+
+  // ---------- View in your space
+  // Everything happens in the visitor's browser: the room photo is never uploaded.
+  // Coordinates are kept in room-image pixels; pxPerCm comes from the orange
+  // measuring line the visitor lays over something of known size.
+  pages.space = () => {
+    const S = AR ? {
+      sample: 'غرفة تجريبية', upload: 'أضف صورة جدارك', change: 'غيّر الصورة',
+      lineIs: 'طول الخط البرتقالي', cm: 'سم', adjust: 'اضبط الخط', done: 'تم',
+      wallIs: 'عرض الصورة يقارب', m: 'م', pick: 'اختر عملًا', allEx: 'كل المعارض', search: 'ابحث بالفنان أو العنوان',
+      width: 'العرض', height: 'الارتفاع', swap: 'تبديل', frame: 'الإطار', none: 'بدون', black: 'أسود', white: 'أبيض', oak: 'خشب',
+      mat: 'حافة بيضاء (Passe-partout)', light: 'الإضاءة', download: 'حمّل الصورة', share: 'شارك', request: 'اطلب الشراء',
+      name: 'الاسم', country: 'الدولة والمدينة', notes: 'ملاحظات (اختياري)', send: 'أرسل الطلب بالبريد',
+      avail: 'اسأل عن التوفر', reqNote: 'نؤكد السعر والتوفر والشحن إلى أي مكان في العالم عبر البريد. أرفق الصورة التي حمّلتها لنرى مساحتك.',
+      choose: 'اختر عملًا من القائمة', drag: 'اسحب العمل لتحريكه', measureHint: 'اسحب طرفي الخط البرتقالي فوق شيء تعرف مقاسه، ثم اكتب طوله.',
+      tips: 'أمثلة: باب ≈ ٨٠–٩٠ سم عرضًا و٢٠٠ سم ارتفاعًا، ورقة A4 = ٢٩٫٧ سم، مفتاح كهرباء ≈ ٨ سم.',
+      subject: 'طلب شراء', hello: 'مرحبًا، أودّ شراء هذا العمل:', link: 'الرابط', mySpace: 'سأرفق صورة العمل في مساحتي.',
+      noMatch: 'لا توجد نتائج.', n: 'عملًا'
+    } : {
+      sample: 'Try a sample room', upload: 'Add a photo of your wall', change: 'Change photo',
+      lineIs: 'The orange line is', cm: 'cm', adjust: 'Adjust the line', done: 'Done',
+      wallIs: 'Your photo shows about', m: 'm across', pick: 'Choose an artwork', allEx: 'All exhibitions', search: 'Search by artist or title',
+      width: 'Width', height: 'Height', swap: 'Swap', frame: 'Frame', none: 'None', black: 'Black', white: 'White', oak: 'Oak',
+      mat: 'White mat', light: 'Light', download: 'Download image', share: 'Share', request: 'Request to purchase',
+      name: 'Your name', country: 'Country & city', notes: 'Notes (optional)', send: 'Send request by email',
+      avail: 'Ask about availability', reqNote: 'We confirm price, availability and shipping anywhere in the world by email. Attach the image you downloaded so we can see your space.',
+      choose: 'Choose an artwork from the list', drag: 'Drag the artwork to move it', measureHint: 'Drag the ends of the orange line onto something you know the size of, then type its length.',
+      tips: 'For example: a door is about 80–90 cm wide and 200 cm tall, an A4 sheet is 29.7 cm, a light switch about 8 cm.',
+      subject: 'Purchase request', hello: "Hello, I'd like to buy this artwork:", link: 'Link', mySpace: "I'll attach a picture of it in my space.",
+      noMatch: 'Nothing matches that search.', n: 'artworks'
+    };
+    const pool = ALL.filter(dims);
+    const cv = $('#stage'), ctx = cv.getContext('2d');
+    const st = {
+      room: null, sample: true, rw: 1600, rh: 1000, line: { x1: 450, y1: 760, x2: 1150, y2: 760 }, lineCm: 175,
+      work: null, img: null, wcm: 0, hcm: 0, x: 800, y: 330, frame: 'black', mat: false, light: 1, measure: false
+    };
+    const FRAME = { none: null, black: '#151515', white: '#f4f4f2', oak: '#b88a57' };
+    const pxPerCm = () => Math.hypot(st.line.x2 - st.line.x1, st.line.y2 - st.line.y1) / Math.max(1, st.lineCm);
+
+    // sample room, drawn rather than photographed: 1600×1000 px = 400 cm of wall
+    function drawSample(c) {
+      const g = c.createLinearGradient(0, 0, 0, 780); g.addColorStop(0, '#ece8e1'); g.addColorStop(1, '#dcd6cc');
+      c.fillStyle = g; c.fillRect(0, 0, 1600, 1000);
+      c.fillStyle = '#a98c6d'; c.fillRect(0, 860, 1600, 140);
+      c.fillStyle = '#f3f1ec'; c.fillRect(0, 846, 1600, 16);
+      // sofa, 175 cm
+      c.fillStyle = '#5a6670'; const r = (x, y, w, h, rad) => { c.beginPath(); c.roundRect(x, y, w, h, rad); c.fill(); };
+      r(440, 640, 720, 150, 26); c.fillStyle = '#4c5760'; r(420, 690, 70, 150, 22); r(1110, 690, 70, 150, 22);
+      c.fillStyle = '#66737d'; r(480, 735, 640, 85, 18);
+      c.fillStyle = '#2a2a2a'; c.fillRect(470, 836, 14, 24); c.fillRect(1116, 836, 14, 24);
+      // plant + side table
+      c.fillStyle = '#2a2a2a'; c.fillRect(1290, 740, 120, 12); c.fillRect(1344, 752, 12, 108);
+      c.fillStyle = '#c9c2b6'; r(1310, 690, 80, 52, 10);
+      c.fillStyle = '#5f7d55'; for (let k = 0; k < 7; k++) { c.beginPath(); c.ellipse(1350 + Math.cos(k) * 40, 630 + Math.sin(k * 2) * 30, 18, 46, k, 0, 7); c.fill(); }
+    }
+
+    const wrap = $('#stage-wrap');
+    let view = 1, dpr = 1;
+    function fit() {
+      const W = wrap.clientWidth, maxH = innerWidth < 960 ? Math.max(220, innerHeight * .45) : Math.max(320, innerHeight - 180);
+      view = Math.min(W / st.rw, maxH / st.rh);
+      dpr = devicePixelRatio || 1;
+      cv.style.width = `${st.rw * view}px`; cv.style.height = `${st.rh * view}px`;
+      cv.width = Math.round(st.rw * view * dpr); cv.height = Math.round(st.rh * view * dpr);
+      draw();
+    }
+    // the artwork rectangle (with frame and mat) in room pixels
+    function workRect() {
+      const k = pxPerCm(), f = st.frame === 'none' ? 0 : 3, m = st.mat ? 7 : 0;
+      const w = (st.wcm + 2 * (f + m)) * k, h = (st.hcm + 2 * (f + m)) * k;
+      return { x: st.x - w / 2, y: st.y - h / 2, w, h, f: f * k, m: m * k };
+    }
+    function paint(c, handles) {
+      if (st.sample) drawSample(c); else c.drawImage(st.room, 0, 0, st.rw, st.rh);
+      if (st.img) {
+        const r = workRect();
+        c.save();
+        c.shadowColor = 'rgba(0,0,0,.35)'; c.shadowBlur = r.w * .04; c.shadowOffsetX = r.w * .012; c.shadowOffsetY = r.w * .02;
+        c.fillStyle = FRAME[st.frame] || '#000'; c.fillRect(r.x, r.y, r.w, r.h);
+        c.restore();
+        if (st.mat) { c.fillStyle = '#fbfaf7'; c.fillRect(r.x + r.f, r.y + r.f, r.w - 2 * r.f, r.h - 2 * r.f); }
+        const ix = r.x + r.f + r.m, iy = r.y + r.f + r.m, iw = r.w - 2 * (r.f + r.m), ih = r.h - 2 * (r.f + r.m);
+        c.save(); c.filter = `brightness(${st.light})`;
+        // cover-fit the photo into the artwork's real proportions
+        const s = Math.max(iw / st.img.naturalWidth, ih / st.img.naturalHeight), sw = iw / s, sh = ih / s;
+        c.drawImage(st.img, (st.img.naturalWidth - sw) / 2, (st.img.naturalHeight - sh) / 2, sw, sh, ix, iy, iw, ih);
+        c.restore();
+        if (handles && !st.measure) { c.strokeStyle = 'rgba(226,129,23,.9)'; c.lineWidth = 2 / view; c.setLineDash([8 / view, 6 / view]); c.strokeRect(r.x - 6 / view, r.y - 6 / view, r.w + 12 / view, r.h + 12 / view); c.setLineDash([]); }
+      }
+      if (handles && st.measure) {
+        const { x1, y1, x2, y2 } = st.line;
+        c.strokeStyle = '#E28117'; c.lineWidth = 4 / view; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke();
+        [[x1, y1], [x2, y2]].forEach(([x, y]) => { c.fillStyle = '#E28117'; c.beginPath(); c.arc(x, y, 11 / view, 0, 7); c.fill(); c.fillStyle = '#fff'; c.beginPath(); c.arc(x, y, 4 / view, 0, 7); c.fill(); });
+        c.font = `${15 / view}px Urbanist, sans-serif`; c.fillStyle = '#000'; c.textAlign = 'center';
+        const lbl = `${num(st.lineCm)} ${S.cm}`, mx = (x1 + x2) / 2, my = (y1 + y2) / 2 - 16 / view, tw = c.measureText(lbl).width + 14 / view;
+        c.fillStyle = '#E28117'; c.fillRect(mx - tw / 2, my - 14 / view, tw, 22 / view); c.fillStyle = '#000'; c.fillText(lbl, mx, my + 2 / view);
+      }
+    }
+    function draw() {
+      ctx.setTransform(dpr * view, 0, 0, dpr * view, 0, 0);
+      ctx.clearRect(0, 0, st.rw, st.rh);
+      paint(ctx, true);
+      $('#wall-size').textContent = `${S.wallIs} ${num((st.rw / pxPerCm() / 100).toFixed(1))} ${S.m}`;
+      $('#stage-hint').textContent = st.measure ? S.measureHint : st.work ? S.drag : S.choose;
+    }
+
+    // pointer: drag line handles in measure mode, drag the artwork otherwise
+    let drag = null;
+    const pt = e => { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) / view, y: (e.clientY - r.top) / view }; };
+    cv.addEventListener('pointerdown', e => {
+      const p = pt(e), tol = 26 / view;
+      if (st.measure) {
+        if (Math.hypot(p.x - st.line.x1, p.y - st.line.y1) < tol) drag = { h: 1 };
+        else if (Math.hypot(p.x - st.line.x2, p.y - st.line.y2) < tol) drag = { h: 2 };
+        else drag = { h: 0, ox: p.x, oy: p.y, l: { ...st.line } };
+      } else if (st.img) {
+        const r = workRect();
+        if (p.x > r.x - tol && p.x < r.x + r.w + tol && p.y > r.y - tol && p.y < r.y + r.h + tol) drag = { w: 1, dx: p.x - st.x, dy: p.y - st.y };
+      }
+      if (drag) { cv.setPointerCapture(e.pointerId); e.preventDefault(); }
+    });
+    cv.addEventListener('pointermove', e => {
+      const p = pt(e);
+      if (!drag) {
+        if (!st.measure && st.img) { const r = workRect(); cv.style.cursor = p.x > r.x && p.x < r.x + r.w && p.y > r.y && p.y < r.y + r.h ? 'grab' : 'default'; }
+        return;
+      }
+      const cl = (v, max) => Math.max(0, Math.min(max, v));
+      if (drag.w) { st.x = cl(p.x - drag.dx, st.rw); st.y = cl(p.y - drag.dy, st.rh); }
+      else if (drag.h === 1) { st.line.x1 = cl(p.x, st.rw); st.line.y1 = cl(p.y, st.rh); }
+      else if (drag.h === 2) { st.line.x2 = cl(p.x, st.rw); st.line.y2 = cl(p.y, st.rh); }
+      else { const dx = p.x - drag.ox, dy = p.y - drag.oy; Object.assign(st.line, { x1: drag.l.x1 + dx, y1: drag.l.y1 + dy, x2: drag.l.x2 + dx, y2: drag.l.y2 + dy }); }
+      draw();
+    });
+    ['pointerup', 'pointercancel'].forEach(t => cv.addEventListener(t, () => { drag = null; }));
+
+    // step 1: room
+    const file = $('#room-file');
+    file.addEventListener('change', () => {
+      const f = file.files[0]; if (!f) return;
+      const im = new Image();
+      im.onload = () => {
+        const k = Math.min(1, 2200 / Math.max(im.naturalWidth, im.naturalHeight));
+        const c = document.createElement('canvas'); c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
+        c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(im.src);
+        Object.assign(st, { room: c, sample: false, rw: c.width, rh: c.height, lineCm: 100 });
+        st.line = { x1: c.width * .3, y1: c.height * .62, x2: c.width * .7, y2: c.height * .62 };
+        st.x = c.width / 2; st.y = c.height * .38;
+        $('#line-cm').value = 100;
+        setMeasure(true); $('#room-label').textContent = S.change; fit();
+        $('#step-scale').scrollIntoView({ block: 'nearest', behavior: REDUCED ? 'auto' : 'smooth' });
+      };
+      im.src = URL.createObjectURL(f);
+    });
+    $('#use-sample').onclick = () => {
+      Object.assign(st, { room: null, sample: true, rw: 1600, rh: 1000, line: { x1: 450, y1: 760, x2: 1150, y2: 760 }, lineCm: 175, x: 800, y: 330 });
+      $('#line-cm').value = 175; setMeasure(false); fit();
+    };
+    // step 2: scale
+    const setMeasure = on => { st.measure = on; $('#measure-btn').textContent = on ? S.done : S.adjust; $('#measure-btn').setAttribute('aria-pressed', on); draw(); };
+    $('#measure-btn').onclick = () => setMeasure(!st.measure);
+    $('#line-cm').addEventListener('input', e => { const v = parseFloat(e.target.value); if (v > 0) { st.lineCm = v; draw(); } });
+
+    // step 3: pick
+    const grid = $('#pick-grid'), exSel = $('#pick-ex'), q = $('#pick-q');
+    exSel.innerHTML = `<option value="">${S.allEx}</option>` + [...EX].reverse().filter(e => pool.some(w => w.ex === e.id)).map(e => `<option value="${e.id}">${esc(L(e, 'title'))}</option>`).join('');
+    function list() {
+      const s = q.value.trim().toLowerCase();
+      const items = pool.filter(w => (!exSel.value || w.ex === exSel.value) && (!s || (w.artist + ' ' + w.title).toLowerCase().includes(s)));
+      grid.innerHTML = items.map(w => `<li><button type="button" data-w="${w.ex}.${w.i}" aria-pressed="${st.work === w}" title="${esc(w.title)} — ${esc(w.artist)}">
+        <img src="${workSrc(w.imgs[0].f, true)}" alt="${esc(w.title)}, ${esc(w.artist)}" loading="lazy"><span>${esc(w.artist)}</span></button></li>`).join('') || `<li class="empty">${S.noMatch}</li>`;
+      $('#pick-count').textContent = `${num(items.length)} ${S.n}`;
+    }
+    exSel.onchange = list; let qt; q.oninput = () => { clearTimeout(qt); qt = setTimeout(list, 120); };
+    grid.onclick = e => { const b = e.target.closest('[data-w]'); if (b) select(b.dataset.w); };
+    function select(id, keepPos) {
+      const [ex, i] = id.split('.'); const w = pool.find(x => x.ex === ex && x.i === +i); if (!w) return;
+      const d = dims(w); st.work = w; st.wcm = d.w; st.hcm = d.h;
+      $('#w-cm').value = d.w; $('#h-cm').value = d.h;
+      const im = new Image(); im.onload = () => { st.img = im; setMeasure(false); draw(); }; im.src = workSrc(w.imgs[0].f);
+      const e = exById[w.ex];
+      $('#picked').innerHTML = `<a href="${url.artist(w.artist)}" dir="ltr">${esc(w.artist)}</a><span class="t" dir="auto">${esc(w.title)}</span>
+        <span class="m" dir="auto">${meta(w)}</span>${e ? `<a class="x" href="${url.ex(e.id)}">${esc(L(e, 'title'))}</a>` : ''}<span class="av">${S.avail}</span>`;
+      $$('[data-w]', grid).forEach(b => b.setAttribute('aria-pressed', b.dataset.w === id));
+      $('#tune').hidden = false; $('#buy').hidden = false;
+      history.replaceState(null, '', `?w=${id}`);
+    }
+    // step 4: tune
+    const num2 = v => Math.max(1, parseFloat(v) || 1);
+    $('#w-cm').oninput = e => { st.wcm = num2(e.target.value); draw(); };
+    $('#h-cm').oninput = e => { st.hcm = num2(e.target.value); draw(); };
+    $('#swap').onclick = () => { [st.wcm, st.hcm] = [st.hcm, st.wcm]; $('#w-cm').value = st.wcm; $('#h-cm').value = st.hcm; draw(); };
+    $('#frames').onclick = e => { const b = e.target.closest('[data-frame]'); if (!b) return; st.frame = b.dataset.frame; $$('[data-frame]').forEach(x => x.setAttribute('aria-pressed', x === b)); draw(); };
+    $('#mat').onchange = e => { st.mat = e.target.checked; draw(); };
+    $('#light').oninput = e => { st.light = +e.target.value; draw(); };
+
+    // step 5: snapshot, share, request
+    function snapshot() {
+      const c = document.createElement('canvas'), bar = Math.round(st.rw * .045);
+      c.width = st.rw; c.height = st.rh + bar;
+      const x = c.getContext('2d'); paint(x, false);
+      x.fillStyle = '#000'; x.fillRect(0, st.rh, st.rw, bar);
+      x.font = `${Math.round(bar * .38)}px Urbanist, sans-serif`; x.textBaseline = 'middle';
+      x.fillStyle = '#F2F2F2'; x.textAlign = 'left';
+      x.fillText(st.work ? `${st.work.title} — ${st.work.artist} · ${num(st.wcm)}×${num(st.hcm)} ${S.cm}` : '', bar * .4, st.rh + bar / 2);
+      x.fillStyle = '#E28117'; x.textAlign = 'right'; x.fillText('theartgallery.world', st.rw - bar * .4, st.rh + bar / 2);
+      return new Promise(res => c.toBlob(res, 'image/jpeg', .9));
+    }
+    const fname = () => `the-art-gallery-${st.work ? slug(st.work.artist + ' ' + st.work.title) : 'space'}.jpg`;
+    $('#dl').onclick = async () => {
+      const b = await snapshot(), a = document.createElement('a');
+      a.href = URL.createObjectURL(b); a.download = fname(); a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    };
+    const shareBtn = $('#share');
+    shareBtn.hidden = !(navigator.canShare && navigator.canShare({ files: [new File([''], 'x.jpg', { type: 'image/jpeg' })] }));
+    shareBtn.onclick = async () => {
+      const f = new File([await snapshot()], fname(), { type: 'image/jpeg' });
+      try { await navigator.share({ files: [f], title: 'the ART GALLERY', text: st.work ? `${st.work.title} — ${st.work.artist}\n${location.href}` : location.href }); } catch (e) { /* cancelled */ }
+    };
+    $('#req-toggle').onclick = () => { const f = $('#req'); f.hidden = !f.hidden; if (!f.hidden) $('#req-name').focus(); };
+    $('#req').onsubmit = e => {
+      e.preventDefault(); const w = st.work; if (!w) return;
+      const ex = exById[w.ex];
+      const body = [S.hello, '', `${w.title} — ${w.artist}`, `${fmtSize(w.size)}${w.medium ? ' · ' + w.medium : ''}`, ex ? `${L(ex, 'title')} (${ex.year})` : '',
+        `${S.link}: ${new URL(url.space(w), location.href).href}`, '', `${S.name}: ${$('#req-name').value}`, `${S.country}: ${$('#req-country').value}`,
+        $('#req-notes').value ? `\n${$('#req-notes').value}` : '', '', S.mySpace].filter(x => x !== undefined).join('\n');
+      location.href = `mailto:info@theartgallery.world?subject=${encodeURIComponent(`${S.subject}: ${w.title} — ${w.artist}`)}&body=${encodeURIComponent(body)}`;
+    };
+
+    addEventListener('resize', () => { clearTimeout(fit.t); fit.t = setTimeout(fit, 100); });
+    list(); fit();
+    const want = params.get('w'); if (want) select(want);
   };
 
   function notFound(main, back, name) {
