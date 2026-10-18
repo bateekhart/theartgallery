@@ -703,3 +703,33 @@ html, body { overflow-x: clip; }
   .stage-col { position: sticky; top: 0; z-index: 5; background: var(--wall); padding-top: 8px; }
   .pick-grid { max-height: 280px; }
 }
+
+/* ---------- Posters shown whole, never cropped */
+.card .img { background: var(--graphite); }
+.card img { aspect-ratio: auto; height: 100%; object-fit: cover; }
+.card .img.is-tall img { object-fit: contain; }
+.slide-img { aspect-ratio: 1; background: var(--ink); }
+.slide-bg { position: absolute; inset: -40px; background-size: cover; background-position: center; filter: blur(28px) brightness(.55); }
+.slide-img img { position: relative; object-fit: contain; transform: scale(1.03); }
+.slide.is-active .slide-img img { transform: none; }
+.slide { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.ex-hero-img { background: none; overflow: visible; }
+.ex-hero-img img { aspect-ratio: auto; width: auto; max-width: 100%; height: auto; max-height: calc(100vh - 130px); object-fit: contain; transform: none; margin-inline: auto; display: block; }
+@media (max-width: 960px) {
+  .ex-hero-img img { aspect-ratio: auto; max-height: 80vh; }
+  .slide-img { aspect-ratio: 1; }
+}
+
+/* ---------- Per-artist photo strips (shows without per-piece photos) */
+.sets { display: grid; gap: clamp(28px, 3vw, 44px); margin-top: 24px; }
+.set { border-top: 1px solid var(--line); padding-top: 16px; }
+.artist-show .set { border-top: 0; padding-top: 0; margin-bottom: 28px; }
+.set-name { font-weight: 300; font-size: 24px; }
+.set-name a { text-decoration: none; font-family: "Urbanist", sans-serif; }
+.set-name a:hover { color: var(--orange); }
+.set-note { font-size: 13px; color: var(--muted); margin: 2px 0 12px; }
+.set-strip { list-style: none; display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: thin; scrollbar-color: var(--orange) transparent; }
+.set-strip li { flex: none; }
+.set-strip button { display: block; padding: 0; border: 0; background: #e6e6e6; cursor: zoom-in; overflow: hidden; }
+.set-strip img { height: clamp(180px, 22vw, 280px); width: auto; transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+.set-strip button:hover img { transform: scale(1.04); }

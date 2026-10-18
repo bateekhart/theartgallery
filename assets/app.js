@@ -18,6 +18,7 @@
   const BIOS = window.BIOS || {};
   const PORTRAITS = window.PORTRAITS || {};
   const VIEWS = window.VIEWS || {};
+  const SETS = window.SETS || {};
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const params = new URLSearchParams(location.search);
   const BRAND = AR ? 'ذا آرت جاليري' : 'the ART GALLERY';
@@ -34,7 +35,7 @@
     notFound: 'لم نجد هذه الصفحة.', backTo: 'العودة إلى', cm: 'سم', of: 'من', shown: 'معروضة', more: 'عرض المزيد',
     keyVisual: 'الهوية البصرية لمعرض', photoOf: 'صورة', portraitOf: 'صورة', curated: 'تنسيق', hostedLabel: 'معرض مستضاف',
     beyond: 'خارج الجاليري', email: 'البريد', instagram: 'إنستجرام', rights: 'ذا آرت جاليري', view: 'عرض', slide: 'شريحة',
-    pause: 'إيقاف', play: 'تشغيل', exhibition: 'المعرض', artist: 'الفنان', count: 'عدد', years: 'السنوات', space: 'شاهدها في مساحتك'
+    pause: 'إيقاف', play: 'تشغيل', exhibition: 'المعرض', artist: 'الفنان', count: 'عدد', years: 'السنوات', space: 'شاهدها في مساحتك', byArtist: 'الأعمال حسب الفنان', setNote: 'صور من أعمال الفنان في المعرض'
   } : {
     home: 'Home', exhibitions: 'Exhibitions', artworks: 'Artworks', artists: 'Artists', about: 'About', work: 'Work with us',
     lang: 'عربي', langCode: 'ar', menu: 'Open menu', close: 'Close', prev: 'Previous', next: 'Next',
@@ -46,7 +47,7 @@
     notFound: "We couldn't find that page.", backTo: 'Back to', cm: 'cm', of: 'of', shown: 'shown', more: 'Show more',
     keyVisual: 'Key visual for', photoOf: 'Photo of', portraitOf: 'Portrait of', curated: 'Curated', hostedLabel: 'Hosted exhibition',
     beyond: 'Beyond the gallery', email: 'Email', instagram: 'Instagram', rights: 'the ART GALLERY', view: 'View', slide: 'Slide',
-    pause: 'Pause', play: 'Play', exhibition: 'Exhibition', artist: 'Artist', count: 'Count', years: 'Years', space: 'View in your space'
+    pause: 'Pause', play: 'Play', exhibition: 'Exhibition', artist: 'Artist', count: 'Count', years: 'Years', space: 'View in your space', byArtist: 'Works by artist', setNote: "Photos of the artist's works in the show"
   };
 
   // ---------- Helpers
@@ -66,6 +67,8 @@
     return `${num(n)} ${m >= 3 && m <= 10 ? f[2] : f[3]}`;
   };
   const label = e => e.no ? `${T.no} ${padAr(e.no)}` : T.hosted;
+  // posters are shown whole; very tall ones sit inside a box at most 1.3× as tall as wide
+  const poster = e => { const [w, h] = e.imageSize || [1, 1]; return { w, h, box: `${w} / ${Math.min(h, Math.round(w * 1.3))}`, tall: h > w * 1.3 }; };
   const url = {
     home: ROOT, about: ROOT + 'about/', exhibitions: ROOT + 'exhibitions/', artists: ROOT + 'artists/',
     ex: id => `${ROOT}exhibition/?id=${id}`, artist: name => `${ROOT}artist/?a=${slug(name)}`,
@@ -75,6 +78,23 @@
   const img = (p, w) => BASE + p;
   const workSrc = (f, thumb) => `${BASE}assets/img/works/${thumb ? 't/' : ''}${f}.jpg`;
   const viewSrc = (f, thumb) => `${BASE}assets/img/views/${thumb ? 't/' : ''}${f}.jpg`;
+  const setSrc = (f, thumb) => `${BASE}assets/img/sets/${thumb ? 't/' : ''}${f}.jpg`;
+  // a strip of photos of one artist's works in one show (pieces not told apart)
+  const setStrip = (exId, name, withName) => {
+    const list = (SETS[exId] || {})[name]; if (!list) return '';
+    return `<div class="set reveal">
+      ${withName ? `<h3 class="set-name"><a href="${url.artist(name)}" dir="ltr">${esc(name)}</a></h3>` : ''}
+      <p class="set-note">${T.setNote}</p>
+      <ul class="set-strip" data-set="${exId}|${esc(name)}">${list.map(([f, w, h], k) => `<li><button type="button" data-k="${k}" aria-label="${esc(T.view)} ${num(k + 1)}: ${esc(name)}"><img src="${setSrc(f, true)}" alt="${esc(name)}" loading="lazy" width="${w}" height="${h}"></button></li>`).join('')}</ul>
+    </div>`;
+  };
+  document.addEventListener('click', ev => {
+    const b = ev.target.closest('[data-set] [data-k]'); if (!b) return;
+    const [exId, name] = b.closest('[data-set]').dataset.set.split('|');
+    const e = exById[exId];
+    lbOpen(SETS[exId][name].map(([f]) => ({ src: setSrc(f), alt: name,
+      cap: `<a class="lb-artist" href="${url.artist(name)}" dir="ltr">${esc(name)}</a><span class="lb-meta">${T.setNote}</span>${e ? `<a class="lb-ex" href="${url.ex(e.id)}">${esc(L(e, 'title'))} · ${num(e.year)}</a>` : ''}` })), +b.dataset.k);
+  });
   const portrait = name => PORTRAITS[name] ? `${BASE}assets/img/artists/${PORTRAITS[name]}.jpg` : '';
   const fmtSize = s => !s ? '' : /\d/.test(s) && !/cm|h\b/i.test(s) ? `${s.replace(/x/gi, '×')} ${T.cm}` : s.replace(/x/gi, '×');
 
@@ -333,7 +353,7 @@
   // ---------- Exhibition card (used by home carousel and exhibitions page)
   const exCard = (e, cls = 'card') => `
     <a class="${cls}" href="${url.ex(e.id)}">
-      <span class="img"><img src="${img(e.image)}" alt="${esc(T.keyVisual)} ${esc(L(e, 'title'))}" loading="lazy" ${e.imagePos ? `style="object-position:${e.imagePos}"` : ''}></span>
+      <span class="img${poster(e).tall ? ' is-tall' : ''}" style="aspect-ratio:${poster(e).box}"><img src="${img(e.image)}" alt="${esc(T.keyVisual)} ${esc(L(e, 'title'))}" loading="lazy" width="${poster(e).w}" height="${poster(e).h}"></span>
       <span class="info"><span class="no">${label(e)}</span><span class="year">${num(e.year)}</span></span>
       <span class="title">${esc(L(e, 'title'))}</span>
       <span class="meta">${esc(L(e, 'dates'))}${e.artists.length ? ' · ' + plural(e.artists.length, 'artistsN') : ''}</span>
@@ -366,7 +386,8 @@
           ${list.map((e, i) => `
           <article class="slide" aria-roledescription="${esc(T.slide)}" aria-label="${num(i + 1)} ${esc(T.of)} ${num(list.length)}">
             <a class="slide-img" href="${url.ex(e.id)}" tabindex="-1" aria-hidden="true">
-              <img src="${img(e.image)}" alt="" ${i > 2 ? 'loading="lazy"' : ''} ${e.imagePos ? `style="object-position:${e.imagePos}"` : ''}>
+              <span class="slide-bg" style="background-image:url('${img(e.image)}')"></span>
+              <img src="${img(e.image)}" alt="" ${i > 2 ? 'loading="lazy"' : ''} width="${poster(e).w}" height="${poster(e).h}">
             </a>
             <div class="slide-info">
               <p class="eyebrow"><span class="level">${label(e)}</span> ${esc(L(e, 'dates'))}</p>
@@ -502,7 +523,7 @@
     main.innerHTML = `
       <section class="ex-hero">
         <div class="wrap">
-          <div class="ex-hero-img reveal"><img src="${img(e.image)}" alt="${esc(T.keyVisual)} ${esc(L(e, 'title'))}" data-parallax=".25" ${e.imagePos ? `style="object-position:${e.imagePos}"` : ''}></div>
+          <div class="ex-hero-img reveal"><img src="${img(e.image)}" alt="${esc(T.keyVisual)} ${esc(L(e, 'title'))}" width="${poster(e).w}" height="${poster(e).h}"></div>
           <div class="ex-hero-info reveal">
             <a class="crumb" href="${url.exhibitions}">${AR ? '→' : '←'} ${T.exhibitions}</a>
             <p class="eyebrow"><span class="level">${label(e)}</span> ${esc(L(e, 'dates'))}</p>
@@ -530,6 +551,14 @@
               ${[...new Set(shown.map(w => w.artist))].sort().map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select></label>` : ''}
           </div>
           <ul class="masonry" id="ex-works"></ul>
+        </div>
+      </section>` : ''}
+
+      ${SETS[e.id] ? `
+      <section class="section tight">
+        <div class="wrap">
+          <h2 class="h-sec reveal">${T.byArtist}</h2>
+          <div class="sets">${names.filter(n => SETS[e.id][n]).map(n => setStrip(e.id, n, true)).join('')}</div>
         </div>
       </section>` : ''}
 
@@ -686,6 +715,7 @@
         return `<section class="section tight artist-show">
           <div class="wrap">
             <div class="bar reveal"><h2 class="h-sec"><a href="${url.ex(s.id)}">${esc(L(s, 'title'))}</a> <span>${esc(L(s, 'dates'))}</span></h2></div>
+            ${setStrip(s.id, a.name, false)}
             <ul class="masonry" data-ex="${s.id}"></ul>
           </div>
         </section>`;
