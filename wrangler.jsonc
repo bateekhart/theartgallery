@@ -1,10 +1,15 @@
 // Cloudflare Worker that serves this folder as a static site.
 // "name" must match the Worker in the Cloudflare dashboard.
+// Deploy with `npx wrangler deploy` from a copy of this folder (see CLAUDE.md).
 {
   "name": "theartgallery1",
   "compatibility_date": "2026-10-13",
   "assets": {
     "directory": "./",
     "not_found_handling": "404-page"
-  }
+  },
+  "routes": [
+    { "pattern": "theartgallery.world", "custom_domain": true },
+    { "pattern": "www.theartgallery.world", "custom_domain": true }
+  ]
 }
