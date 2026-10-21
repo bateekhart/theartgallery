@@ -191,3 +191,134 @@ window.EXHIBITIONS = [
       "Reem Elhefnawy", "Yahya Khalil"]
   }
 ];
+
+/* Curation projects outside our exhibitions (photos in assets/img/projects/<id>/, thumbs in t/).
+   works = what was installed; never prices. */
+window.PROJECTS = [
+ {
+  "id": "marina-terrace",
+  "year": 2025,
+  "title": "Marina Terrace Tower",
+  "titleAr": "برج مارينا تيراس",
+  "kind": "Art curation · Residential lobby & lounge",
+  "kindAr": "تنسيق فني · ردهة وصالة سكنية",
+  "place": "Marina Terrace Tower, Dubai Marina, UAE",
+  "placeAr": "برج مارينا تيراس، دبي مارينا، الإمارات",
+  "dates": "Installed September 2025",
+  "datesAr": "التركيب سبتمبر ٢٠٢٥",
+  "blurb": "For the renovation of Marina Terrace Tower in Dubai Marina, we curated the art for its lobby, lounge and common areas: twenty works by six artists, chosen and placed piece by piece for the space, from the reception and stairs to the lounge columns.",
+  "blurbAr": "ضمن تجديد برج مارينا تيراس في دبي مارينا، نسّقنا الأعمال الفنية لردهته وصالته ومساحاته المشتركة: عشرون عملًا لستة فنانين، اخترناها ووزّعناها قطعةً قطعة لتناسب المكان، من الاستقبال والدرج إلى أعمدة الصالة.",
+  "image": "mt-00",
+  "photos": [
+   [
+    "mt-00",
+    1800,
+    1350
+   ],
+   [
+    "mt-02",
+    1800,
+    1350
+   ],
+   [
+    "mt-05",
+    1280,
+    960
+   ],
+   [
+    "mt-06",
+    701,
+    1075
+   ],
+   [
+    "mt-13",
+    1800,
+    1350
+   ],
+   [
+    "mt-10",
+    1350,
+    1800
+   ],
+   [
+    "mt-09",
+    1280,
+    960
+   ],
+   [
+    "mt-14",
+    1350,
+    1800
+   ],
+   [
+    "mt-15",
+    1350,
+    1800
+   ],
+   [
+    "mt-16",
+    1350,
+    1800
+   ],
+   [
+    "mt-17",
+    1350,
+    1800
+   ],
+   [
+    "mt-08",
+    1800,
+    1350
+   ],
+   [
+    "mt-18",
+    960,
+    1280
+   ]
+  ],
+  "works": [
+   {
+    "artist": "Rana Khalil",
+    "medium": "Photography print, edition 1/1",
+    "size": "40x60",
+    "qty": 4
+   },
+   {
+    "artist": "Rana Khalil",
+    "medium": "Mixed media on canvas",
+    "size": "120x80",
+    "qty": 1
+   },
+   {
+    "artist": "Rania Abu Elazm",
+    "medium": "Mixed media on canvas",
+    "size": "200x120",
+    "qty": 1
+   },
+   {
+    "artist": "Shahinaz Eletreby",
+    "medium": "Mixed media collage on canvas",
+    "size": "30x30",
+    "qty": 5
+   },
+   {
+    "artist": "Akram El Halwagy",
+    "medium": "Acrylics on canvas",
+    "size": "80x120",
+    "qty": 6
+   },
+   {
+    "artist": "Omar Senada",
+    "medium": "Mixed media on canvas",
+    "size": "150x120",
+    "qty": 2
+   },
+   {
+    "artist": "Nehal Nagaty",
+    "medium": "Painting",
+    "size": "60x80",
+    "qty": 1
+   }
+  ]
+ }
+];

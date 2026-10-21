@@ -19,6 +19,7 @@
   const PORTRAITS = window.PORTRAITS || {};
   const VIEWS = window.VIEWS || {};
   const SETS = window.SETS || {};
+  const PROJECTS = window.PROJECTS || [];
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const params = new URLSearchParams(location.search);
   const BRAND = AR ? 'ذا آرت جاليري' : 'the ART GALLERY';
@@ -35,7 +36,7 @@
     notFound: 'لم نجد هذه الصفحة.', backTo: 'العودة إلى', cm: 'سم', of: 'من', shown: 'معروضة', more: 'عرض المزيد',
     keyVisual: 'الهوية البصرية لمعرض', photoOf: 'صورة', portraitOf: 'صورة', curated: 'تنسيق', hostedLabel: 'معرض مستضاف',
     beyond: 'خارج الجاليري', email: 'البريد', instagram: 'إنستجرام', rights: 'ذا آرت جاليري', view: 'عرض', slide: 'شريحة',
-    pause: 'إيقاف', play: 'تشغيل', exhibition: 'المعرض', artist: 'الفنان', count: 'عدد', years: 'السنوات', space: 'شاهدها في مساحتك', byArtist: 'الأعمال حسب الفنان', setNote: 'صور من أعمال الفنان في المعرض'
+    pause: 'إيقاف', play: 'تشغيل', exhibition: 'المعرض', artist: 'الفنان', count: 'عدد', years: 'السنوات', space: 'شاهدها في مساحتك', byArtist: 'الأعمال حسب الفنان', projects: 'مشروعات التنسيق', projectsLede: 'خارج معارضنا، ننسّق الفن للمساحات السكنية والتجارية.', viewProject: 'شاهد المشروع', installed: 'ما تم تركيبه', piecesN: 'قطع', inProjects: 'في مشروعات التنسيق', photos: 'صور المشروع', place: 'المكان', setNote: 'صور من أعمال الفنان في المعرض'
   } : {
     home: 'Home', exhibitions: 'Exhibitions', artworks: 'Artworks', artists: 'Artists', about: 'About', work: 'Work with us',
     lang: 'عربي', langCode: 'ar', menu: 'Open menu', close: 'Close', prev: 'Previous', next: 'Next',
@@ -47,7 +48,7 @@
     notFound: "We couldn't find that page.", backTo: 'Back to', cm: 'cm', of: 'of', shown: 'shown', more: 'Show more',
     keyVisual: 'Key visual for', photoOf: 'Photo of', portraitOf: 'Portrait of', curated: 'Curated', hostedLabel: 'Hosted exhibition',
     beyond: 'Beyond the gallery', email: 'Email', instagram: 'Instagram', rights: 'the ART GALLERY', view: 'View', slide: 'Slide',
-    pause: 'Pause', play: 'Play', exhibition: 'Exhibition', artist: 'Artist', count: 'Count', years: 'Years', space: 'View in your space', byArtist: 'Works by artist', setNote: "Photos of the artist's works in the show"
+    pause: 'Pause', play: 'Play', exhibition: 'Exhibition', artist: 'Artist', count: 'Count', years: 'Years', space: 'View in your space', byArtist: 'Works by artist', projects: 'Curation projects', projectsLede: 'Beyond our exhibitions, we curate art for residential and commercial spaces.', viewProject: 'View project', installed: 'What we installed', piecesN: 'pieces', inProjects: 'In our curation projects', photos: 'The space', place: 'Place', setNote: "Photos of the artist's works in the show"
   };
 
   // ---------- Helpers
@@ -73,10 +74,19 @@
     home: ROOT, about: ROOT + 'about/', exhibitions: ROOT + 'exhibitions/', artists: ROOT + 'artists/',
     ex: id => `${ROOT}exhibition/?id=${id}`, artist: name => `${ROOT}artist/?a=${slug(name)}`,
     artworks: id => ROOT + 'artworks/' + (id ? `?ex=${id}` : ''), work: ROOT + '#work',
-    space: w => ROOT + 'space/' + (w ? `?w=${w.ex}.${w.i}` : '')
+    space: w => ROOT + 'space/' + (w ? `?w=${w.ex}.${w.i}` : ''),
+    project: id => `${ROOT}project/?id=${id}`
   };
   const img = (p, w) => BASE + p;
   const workSrc = (f, thumb) => `${BASE}assets/img/works/${thumb ? 't/' : ''}${f}.jpg`;
+  const projSrc = (p, f, thumb) => `${BASE}assets/img/projects/${p.id}/${thumb ? 't/' : ''}${f}.jpg`;
+  const projCard = p => `
+    <a class="card proj-card" href="${url.project(p.id)}">
+      <span class="img" style="aspect-ratio:4/3"><img src="${projSrc(p, p.image, true)}" alt="${esc(L(p, 'title'))}" loading="lazy"></span>
+      <span class="info"><span class="no">${esc(L(p, 'kind')).split(' · ')[0]}</span><span class="year">${num(p.year)}</span></span>
+      <span class="title">${esc(L(p, 'title'))}</span>
+      <span class="meta">${esc(L(p, 'place'))}</span>
+    </a>`;
   const viewSrc = (f, thumb) => `${BASE}assets/img/views/${thumb ? 't/' : ''}${f}.jpg`;
   const setSrc = (f, thumb) => `${BASE}assets/img/sets/${thumb ? 't/' : ''}${f}.jpg`;
   // a strip of photos of one artist's works in one show (pieces not told apart)
@@ -484,9 +494,15 @@
         let r = rows.find(x => x.y === e.year); if (!r) rows.push(r = { y: e.year, items: [] });
         r.items.push({ e });
       });
+      PROJECTS.forEach(p => {
+        let r = rows.find(x => x.y === p.year); if (!r) rows.push(r = { y: p.year, items: [] });
+        r.items.push({ p });
+      });
       tl.innerHTML = rows.map(r => `
         <li class="reveal"><span class="tl-year">${num(r.y)}</span>
-          <ul>${r.items.map(it => it.e
+          <ul>${r.items.map(it => it.p
+            ? `<li><a href="${url.project(it.p.id)}"><span class="tl-no">${T.projects.split(' ')[0]}</span> ${esc(L(it.p, 'title'))}</a> <span class="tl-tag">${esc(L(it.p, 'place')).split('،')[0].split(',').slice(-2)[0].trim()}</span></li>`
+            : it.e
             ? `<li><a href="${url.ex(it.e.id)}"><span class="tl-no">${label(it.e)}</span> ${esc(L(it.e, 'title'))}</a>${it.e.beyond ? ` <span class="tl-tag">${T.beyond}</span>` : ''}</li>`
             : `<li class="tl-note">${esc(it.t)}</li>`).join('')}</ul>
         </li>`).join('');
@@ -504,7 +520,14 @@
       <section class="year-group">
         <h2 class="year-label reveal"><span>${num(y)}</span></h2>
         <div class="archive">${EX.filter(e => e.year === y).reverse().map(e => exCard(e, 'card reveal')).join('')}</div>
-      </section>`).join('');
+      </section>`).join('') + (PROJECTS.length ? `
+      <section class="year-group projects-group" id="projects">
+        <h2 class="year-label reveal"><span>${T.projects}</span></h2>
+        <div>
+          <p class="section-lede reveal" style="margin-bottom:24px">${T.projectsLede}</p>
+          <div class="archive">${PROJECTS.map(p => projCard(p).replace('class="card proj-card"', 'class="card proj-card reveal"')).join('')}</div>
+        </div>
+      </section>` : '');
     revealIn(root);
   };
 
@@ -706,6 +729,8 @@
             ${BIOS[a.name] ? `<p class="bio" dir="ltr" lang="en">${esc(BIOS[a.name])}</p>` : ''}
             <p class="eyebrow">${T.exhibitedIn}</p>
             <ul class="show-chips">${shows.map(s => `<li><a href="${url.ex(s.id)}"><span class="no">${label(s)}</span> ${esc(L(s, 'title'))} <span class="y">${num(s.year)}</span></a></li>`).join('')}</ul>
+            ${PROJECTS.some(p => p.works.some(w => w.artist === a.name)) ? `<p class="eyebrow" style="margin-top:22px">${T.inProjects}</p>
+            <ul class="show-chips">${PROJECTS.filter(p => p.works.some(w => w.artist === a.name)).map(p => `<li><a href="${url.project(p.id)}">${esc(L(p, 'title'))} <span class="y">${num(p.year)}</span></a></li>`).join('')}</ul>` : ''}
           </div>
         </div>
       </section>
@@ -963,6 +988,61 @@
     addEventListener('resize', () => { clearTimeout(fit.t); fit.t = setTimeout(fit, 100); });
     list(); fit();
     const want = params.get('w'); if (want) select(want);
+  };
+
+  // ---------- Curation project
+  pages.project = () => {
+    const p = PROJECTS.find(x => x.id === params.get('id'));
+    const main = $('#main');
+    if (!p) return notFound(main, url.exhibitions, T.exhibitions);
+    document.title = `${L(p, 'title')} — ${BRAND}`;
+    setMeta(L(p, 'blurb'), projSrc(p, p.image));
+    const n = p.works.reduce((m, w) => m + w.qty, 0);
+    const people = [...new Set(p.works.map(w => w.artist))];
+    const slides = p.photos.map(([f]) => ({ src: projSrc(p, f), alt: L(p, 'title'), cap: `<span class="lb-title">${esc(L(p, 'title'))}</span><span class="lb-meta">${esc(L(p, 'place'))}</span>` }));
+    main.innerHTML = `
+      <section class="proj-hero">
+        <div class="proj-hero-img"><img src="${projSrc(p, p.image)}" alt="${esc(L(p, 'title'))}" data-parallax=".12"></div>
+        <div class="wrap proj-hero-text reveal">
+          <a class="crumb" href="${url.exhibitions}#projects">${AR ? '→' : '←'} ${T.projects}</a>
+          <p class="eyebrow"><span class="level">${esc(L(p, 'kind'))}</span></p>
+          <h1 class="display">${esc(L(p, 'title'))}</h1>
+        </div>
+      </section>
+      <section class="section tight">
+        <div class="wrap ex-hero" style="padding:0">
+          <div class="wrap" style="padding:0">
+            <p class="ex-blurb reveal" style="margin-top:0">${esc(L(p, 'blurb'))}</p>
+          </div>
+          <dl class="ex-facts reveal">
+            <div><dt>${T.place}</dt><dd>${esc(L(p, 'place'))}</dd></div>
+            <div><dt>${AR ? 'التاريخ' : 'When'}</dt><dd>${esc(L(p, 'dates'))}</dd></div>
+            <div><dt>${T.artists}</dt><dd>${num(people.length)}</dd></div>
+            <div><dt>${T.artworks}</dt><dd>${num(n)}</dd></div>
+          </dl>
+        </div>
+      </section>
+      <section class="section tight on-dark">
+        <div class="wrap">
+          <h2 class="h-sec reveal">${T.photos}</h2>
+          <ul class="views" id="proj-photos">${p.photos.map(([f, w, h], k) => `<li class="reveal"><button type="button" data-v="${k}" aria-label="${esc(T.view)} ${num(k + 1)}"><img src="${projSrc(p, f, true)}" alt="${esc(L(p, 'title'))}" loading="lazy" width="${w}" height="${h}"></button></li>`).join('')}</ul>
+        </div>
+      </section>
+      <section class="section tight">
+        <div class="wrap">
+          <h2 class="h-sec reveal">${T.installed} <span>${plural(people.length, 'artistsN')} · ${num(n)} ${T.piecesN}</span></h2>
+          <ul class="tlist proj-works reveal">${p.works.map(w => `<li>${artists.has(w.artist) ? `<a href="${url.artist(w.artist)}" dir="ltr">${esc(w.artist)}</a>` : `<span class="na" dir="ltr">${esc(w.artist)}</span>`}
+            <span class="t">${esc(w.medium)}</span><span class="m">${fmtSize(w.size)} · × ${num(w.qty)}</span></li>`).join('')}</ul>
+        </div>
+      </section>
+      <section class="section on-dark tight">
+        <div class="wrap bar">
+          <h2 class="display reveal">${AR ? 'أعطنا مساحة.<span><em>وسنمنحها الحياة.</em></span>' : 'Bring us a space.<span><em>We\'ll bring it to life.</em></span>'}</h2>
+          <a class="btn buy reveal" href="${url.work}">${T.work} <span class="arrow">${AR ? '←' : '→'}</span></a>
+        </div>
+      </section>`;
+    $('#proj-photos').onclick = ev => { const b = ev.target.closest('[data-v]'); if (b) lbOpen(slides, +b.dataset.v); };
+    revealIn(main); parallax();
   };
 
   function notFound(main, back, name) {
