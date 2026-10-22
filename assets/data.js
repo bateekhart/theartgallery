@@ -81,7 +81,7 @@ window.EXHIBITIONS = [
     blurb: "Artists breathe new life into discarded objects, weaving narratives from the forgotten. Each piece tells a story of resilience, resourcefulness and the beauty of reinvention.",
     blurbAr: "يمنح الفنانون الأشياء المهملة حياة جديدة، وينسجون من المنسيّ حكايات. كل عمل يروي قصة صمود وحيلة وجمال في إعادة الابتكار.",
     artists: ["Amani Moussa", "Gabal", "Ghada Waleed", "Heba Tarek", "Kamila Bassioni", "Mahitab Elshafie",
-      "Mahmoud Marey", "MennaAllah Raafat", "Miriam Hanna", "Mirna Isac", "Nada Hassanien", "Nada Sayed",
+      "Mahmoud Marey", "MennaAllah Raafat", "Miriam Hanna", "Mirna Isac", "Nada Hassanien", "Nada Darwish",
       "Nagat Farouk", "Omar Hegazy", "OP", "Randa Magdi", "Rania Abu Elazm", "Samah El Shamy", "Wessam Wafik"]
   },
   {
@@ -144,7 +144,7 @@ window.EXHIBITIONS = [
     blurb: "What does it mean to unplug in today's world? An act of rebellion, a return to simplicity, or a necessary pause? The exhibition explores the tension between connection and disconnection, engagement and retreat.",
     blurbAr: "ماذا يعني أن تنفصل في عالم اليوم؟ هل هو تمرّد، أم عودة إلى البساطة، أم وقفة ضرورية للتأمل؟ يستكشف المعرض التوتر بين الاتصال والانفصال، والمشاركة والانسحاب.",
     artists: ["Adham Aboudoma", "Ahmed Jamal", "Ahmed Nour", "Ali Esmat Metwaly", "Asmaa Habib", "Aya Elhussieny",
-      "Aya Salah", "Berry Raheem", "Esraa Mahran", "Farah Elshebiny", "Fathy Hassan", "Habiba Elgazzar",
+      "Aya Salah", "Berry Raheem", "Esraa Mahran", "Farah Elshebiny", "Fathy Hassan", "Habiba Elgazzar", "Haidy Ghanem",
       "Hala Abdelhamed", "Hamas Sabahy", "Lina Eid", "Magy George", "Maha Abdelghani", "Mahitab Elshafie",
       "Mai Manieh", "Mariam Abdelhay", "Mayar Attia", "Moamen Ghorab", "Mohamed Almowafy", "Nehal Nagaty",
       "Nouran Ibrahim", "Nourhan Ebrahim", "Rabab Shaker", "Rania Gad", "Reem Ahmed", "Reem Elhefnawy",
