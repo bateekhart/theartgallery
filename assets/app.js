@@ -31,24 +31,24 @@
     no: 'رقم', hosted: 'استضافة', artist1: 'فنان', artistsN: 'فنانًا', work1: 'عمل', worksN: 'عملًا',
     all: 'الكل', search: 'ابحث بالفنان أو العنوان', searchArtists: 'ابحث عن فنان', noMatch: 'لا توجد نتائج.',
     viewEx: 'شاهد المعرض', seeAll: 'كل المعارض', seeWorks: 'كل الأعمال', open: 'افتح', exhibitedIn: 'شارك في',
-    worksIn: 'الأعمال في المعرض', photosSoon: 'أعمال بدون صور بعد', views: 'من المعرض', guest: 'فنانو هذا المعرض من برنامج Art Routes ولا يظهرون في فهرس فنانينا.',
+    worksIn: 'الأعمال في المعرض', photosSoon: 'أعمال أخرى في المعرض', views: 'من المعرض', guest: 'فنانو هذا المعرض من برنامج Art Routes ولا يظهرون في فهرس فنانينا.',
     about1: 'نبذة', prevEx: 'المعرض السابق', nextEx: 'المعرض التالي', prevArtist: 'الفنان السابق', nextArtist: 'الفنان التالي',
     notFound: 'لم نجد هذه الصفحة.', backTo: 'العودة إلى', cm: 'سم', of: 'من', shown: 'معروضة', more: 'عرض المزيد',
     keyVisual: 'الهوية البصرية لمعرض', photoOf: 'صورة', portraitOf: 'صورة', curated: 'تنسيق', hostedLabel: 'معرض مستضاف',
     beyond: 'خارج الجاليري', email: 'البريد', instagram: 'إنستجرام', rights: 'ذا آرت جاليري', view: 'عرض', slide: 'شريحة',
-    pause: 'إيقاف', play: 'تشغيل', exhibition: 'المعرض', artist: 'الفنان', count: 'عدد', years: 'السنوات', space: 'شاهدها في مساحتك', byArtist: 'الأعمال حسب الفنان', projects: 'مشروعات التنسيق', projectsLede: 'خارج معارضنا، ننسّق الفن للمساحات السكنية والتجارية.', viewProject: 'شاهد المشروع', installed: 'ما تم تركيبه', piecesN: 'قطع', inProjects: 'في مشروعات التنسيق', photos: 'صور المشروع', place: 'المكان', setNote: 'صور من أعمال الفنان في المعرض'
+    pause: 'إيقاف', play: 'تشغيل', exhibition: 'المعرض', artist: 'الفنان', count: 'عدد', years: 'السنوات', space: 'شاهدها في مساحتك', byArtist: 'الأعمال حسب الفنان', skip: 'انتقل إلى المحتوى', bioEn: 'النبذة بالإنجليزية', trySpace: 'جرّبه على جدارك', tryLede: 'أضف صورة جدارك واختر عملًا لتراه بمقاسه الحقيقي، ثم اطلب شراءه من أي مكان في العالم.', tryBtn: 'جرّب الآن', projects: 'مشروعات التنسيق', projectsLede: 'خارج معارضنا، ننسّق الفن للمساحات السكنية والتجارية.', viewProject: 'شاهد المشروع', installed: 'ما تم تركيبه', piecesN: 'قطع', inProjects: 'في مشروعات التنسيق', photos: 'صور المشروع', place: 'المكان', setNote: 'صور من أعمال الفنان في المعرض'
   } : {
     home: 'Home', exhibitions: 'Exhibitions', artworks: 'Artworks', artists: 'Artists', about: 'About', work: 'Work with us',
     lang: 'عربي', langCode: 'ar', menu: 'Open menu', close: 'Close', prev: 'Previous', next: 'Next',
     no: 'No.', hosted: 'Hosted', artist1: 'artist', artistsN: 'artists', work1: 'artwork', worksN: 'artworks',
     all: 'All', search: 'Search by artist or title', searchArtists: 'Search artists', noMatch: 'Nothing matches that search.',
     viewEx: 'View exhibition', seeAll: 'All exhibitions', seeWorks: 'All artworks', open: 'Open', exhibitedIn: 'Exhibited in',
-    worksIn: 'Works in the show', photosSoon: 'Also shown (photos to come)', views: 'From the exhibition', guest: "This exhibition's artists come from Art Routes' programme and are not part of our artist index.",
+    worksIn: 'Works in the show', photosSoon: 'More works in the show', views: 'From the exhibition', guest: "This exhibition's artists come from Art Routes' programme and are not part of our artist index.",
     about1: 'About', prevEx: 'Previous exhibition', nextEx: 'Next exhibition', prevArtist: 'Previous artist', nextArtist: 'Next artist',
     notFound: "We couldn't find that page.", backTo: 'Back to', cm: 'cm', of: 'of', shown: 'shown', more: 'Show more',
     keyVisual: 'Key visual for', photoOf: 'Photo of', portraitOf: 'Portrait of', curated: 'Curated', hostedLabel: 'Hosted exhibition',
     beyond: 'Beyond the gallery', email: 'Email', instagram: 'Instagram', rights: 'the ART GALLERY', view: 'View', slide: 'Slide',
-    pause: 'Pause', play: 'Play', exhibition: 'Exhibition', artist: 'Artist', count: 'Count', years: 'Years', space: 'View in your space', byArtist: 'Works by artist', projects: 'Curation projects', projectsLede: 'Beyond our exhibitions, we curate art for residential and commercial spaces.', viewProject: 'View project', installed: 'What we installed', piecesN: 'pieces', inProjects: 'In our curation projects', photos: 'The space', place: 'Place', setNote: "Photos of the artist's works in the show"
+    pause: 'Pause', play: 'Play', exhibition: 'Exhibition', artist: 'Artist', count: 'Count', years: 'Years', space: 'View in your space', byArtist: 'Works by artist', skip: 'Skip to content', bioEn: 'Biography in English', trySpace: 'See it on your wall', tryLede: 'Add a photo of your wall, pick a piece and see it at its real size, then request it from anywhere in the world.', tryBtn: 'Try it now', projects: 'Curation projects', projectsLede: 'Beyond our exhibitions, we curate art for residential and commercial spaces.', viewProject: 'View project', installed: 'What we installed', piecesN: 'pieces', inProjects: 'In our curation projects', photos: 'The space', place: 'Place', setNote: "Photos of the artist's works in the show"
   };
 
   // ---------- Helpers
@@ -73,7 +73,7 @@
   const url = {
     home: ROOT, about: ROOT + 'about/', exhibitions: ROOT + 'exhibitions/', artists: ROOT + 'artists/',
     ex: id => `${ROOT}exhibition/?id=${id}`, artist: name => `${ROOT}artist/?a=${slug(name)}`,
-    artworks: id => ROOT + 'artworks/' + (id ? `?ex=${id}` : ''), work: ROOT + '#work',
+    artworks: id => ROOT + 'artworks/' + (id ? `?ex=${id}` : ''), work: ROOT + 'contact/',
     space: w => ROOT + 'space/' + (w ? `?w=${w.ex}.${w.i}` : ''),
     project: id => `${ROOT}project/?id=${id}`
   };
@@ -144,13 +144,18 @@
 
   // ---------- Header & footer
   const navItems = [
-    ['exhibitions', url.exhibitions], ['artworks', url.artworks()], ['artists', url.artists], ['about', url.about], ['space', url.space()]
+    ['exhibitions', url.exhibitions], ['artworks', url.artworks()], ['artists', url.artists], ['about', url.about]
   ];
-  const active = { exhibitions: ['exhibitions', 'exhibition'], artworks: ['artworks'], artists: ['artists', 'artist'], about: ['about'], space: ['space'] };
+  // a small framed-picture icon for the View in your space call to action
+  const FRAME_ICON = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="4.5" width="17" height="13" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M6.5 14.5l3.5-4 3 3 2-2 2.5 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 21h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  const active = { exhibitions: ['exhibitions', 'exhibition', 'project'], artworks: ['artworks'], artists: ['artists', 'artist'], about: ['about'] };
   const header = $('#site-header');
   if (header) {
     header.className = 'site-header';
+    const main = $('main');
+    if (main && !main.id) main.id = 'main';
     header.innerHTML = `
+      <a class="skip" href="#${main ? main.id : 'main'}">${T.skip}</a>
       <div class="wrap">
         <a class="brand" href="${url.home}" aria-label="the ART GALLERY, ${esc(T.home)}">
           <img class="logo" src="${BASE}assets/logo.png" alt="the ART GALLERY" width="900" height="288">
@@ -158,7 +163,10 @@
         <nav class="nav" id="nav">
           ${navItems.map(([k, h]) => `<a href="${h}"${active[k].includes(PAGE) ? ' aria-current="page"' : ''}>${T[k]}</a>`).join('')}
           <a class="lang" href="${OTHER}${B.path || ''}${location.search}" hreflang="${T.langCode}" lang="${T.langCode}">${T.lang}</a>
-          <a class="btn" href="${url.work}">${T.work}</a>
+          <span class="nav-ctas">
+            <a class="btn btn-quiet" href="${url.work}"${PAGE === 'contact' ? ' aria-current="page"' : ''}>${T.work}</a>
+            <a class="btn btn-try" href="${url.space()}"${PAGE === 'space' ? ' aria-current="page"' : ''}>${FRAME_ICON}<span>${T.space}</span></a>
+          </span>
         </nav>
         <button class="menu-toggle" type="button" aria-label="${T.menu}" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
       </div>`;
@@ -194,7 +202,7 @@
           <p class="f-line">${AR ? 'أي مساحة. أي وسيط. أي حجم. <em>بتنسيق فني.</em>' : 'Any space. Any medium. Any scale. <em>Curated.</em>'}</p>
         </div>
         <div class="f-cols">
-          <nav aria-label="${esc(T.home)}">${navItems.map(([k, h]) => `<a href="${h}">${T[k]}</a>`).join('')}<a href="${url.work}">${T.work}</a></nav>
+          <nav aria-label="${esc(T.home)}">${navItems.map(([k, h]) => `<a href="${h}">${T[k]}</a>`).join('')}<a href="${url.space()}">${T.space}</a><a href="${url.work}">${T.work}</a></nav>
           <nav aria-label="${esc(T.instagram)}">
             <a href="mailto:info@theartgallery.world" dir="ltr">info@theartgallery.world</a>
             <a href="https://www.instagram.com/theartgallery_eg/" dir="ltr">@theartgallery_eg</a>
@@ -314,7 +322,12 @@
   const io = new IntersectionObserver(entries => entries.forEach(en => {
     if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
   }), { threshold: .06, rootMargin: '0px 0px -4% 0px' });
-  function revealIn(root = document) { $$('.reveal:not(.in), .wcard:not(.in)', root).forEach(el => io.observe(el)); }
+  function revealIn(root = document) {
+    $$('.reveal:not(.in), .wcard:not(.in)', root).forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < innerHeight && r.bottom > 0) el.classList.add('in'); else io.observe(el);
+    });
+  }
 
   function countUp(el, to, suffix = '') {
     if (REDUCED) { el.textContent = num(to) + suffix; return; }
@@ -384,7 +397,8 @@
     const mq = $('#marquee');
     if (mq) {
       const names = artistList.map(a => `<a href="${url.artist(a.name)}" dir="ltr">${esc(a.name)}</a><i aria-hidden="true"></i>`).join('');
-      mq.innerHTML = `<div class="mq-track">${names}</div><div class="mq-track" aria-hidden="true">${names.replace(/<a /g, '<a tabindex="-1" ')}</div>`;
+      const quiet = names.replace(/<a /g, '<a tabindex="-1" ');
+      mq.innerHTML = `<div class="mq-track">${quiet}</div><div class="mq-track" aria-hidden="true">${quiet}</div>`;
     }
 
     // exhibitions carousel
@@ -726,7 +740,7 @@
           <div class="a-info reveal">
             <a class="crumb" href="${url.artists}">${AR ? '→' : '←'} ${T.artists}</a>
             <h1 class="display" dir="ltr">${esc(a.name)}</h1>
-            ${BIOS[a.name] ? `<p class="bio" dir="ltr" lang="en">${esc(BIOS[a.name])}</p>` : ''}
+            ${BIOS[a.name] ? `${AR ? `<p class="bio-note">${T.bioEn}</p>` : ''}<p class="bio" dir="ltr" lang="en">${esc(BIOS[a.name])}</p>` : ''}
             <p class="eyebrow">${T.exhibitedIn}</p>
             <ul class="show-chips">${shows.map(s => `<li><a href="${url.ex(s.id)}"><span class="no">${label(s)}</span> ${esc(L(s, 'title'))} <span class="y">${num(s.year)}</span></a></li>`).join('')}</ul>
             ${PROJECTS.some(p => p.works.some(w => w.artist === a.name)) ? `<p class="eyebrow" style="margin-top:22px">${T.inProjects}</p>
@@ -1038,7 +1052,7 @@
       <section class="section on-dark tight">
         <div class="wrap bar">
           <h2 class="display reveal">${AR ? 'أعطنا مساحة.<span><em>وسنمنحها الحياة.</em></span>' : 'Bring us a space.<span><em>We\'ll bring it to life.</em></span>'}</h2>
-          <a class="btn buy reveal" href="${url.work}">${T.work} <span class="arrow">${AR ? '←' : '→'}</span></a>
+          <a class="btn btn-quiet btn-lg reveal" href="${url.work}">${T.work} <span class="arrow">${AR ? '←' : '→'}</span></a>
         </div>
       </section>`;
     $('#proj-photos').onclick = ev => { const b = ev.target.closest('[data-v]'); if (b) lbOpen(slides, +b.dataset.v); };

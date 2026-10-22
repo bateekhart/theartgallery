@@ -62,7 +62,7 @@ function lookup(lang, kind, q) {
 }
 
 function sitemap() {
-  const pages = ['', 'about/', 'exhibitions/', 'artworks/', 'artists/', 'space/'];
+  const pages = ['', 'about/', 'exhibitions/', 'artworks/', 'artists/', 'space/', 'contact/'];
   const urls = [];
   for (const lang of ['', 'ar/']) {
     pages.forEach(p => urls.push(SITE + '/' + lang + p));

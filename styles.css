@@ -747,3 +747,96 @@ html, body { overflow-x: clip; }
 .projects-group .year-label { font-size: clamp(28px, 2.6vw, 38px); line-height: 1.1; }
 .proj-card .no { color: var(--orange); }
 .projects a.p-what { text-decoration: none; } .projects a.p-what:hover { color: var(--orange); }
+
+/* ==========================================================
+   Calls to action: "View in your space" leads (orange, icon),
+   "Work with us" follows (outlined, quieter).
+   ========================================================== */
+:root { --orange-ink: #A35400; }   /* orange that passes contrast for small text on the light wall */
+.nav-ctas { display: inline-flex; align-items: center; gap: 10px; }
+.btn .ico { width: 20px; height: 20px; flex: none; }
+.btn-try {
+  background: var(--orange); border-color: var(--orange); color: var(--ink);
+  font-weight: 600; box-shadow: 0 6px 18px -8px rgba(226, 129, 23, .7);
+  transition: background .25s, color .25s, border-color .25s, transform .25s, box-shadow .25s;
+}
+.btn-try:hover, .btn-try[aria-current] { background: var(--ink); border-color: var(--ink); color: var(--wall); transform: translateY(-1px); box-shadow: 0 10px 22px -10px rgba(0, 0, 0, .6); }
+.btn-quiet { background: transparent; color: var(--ink); border-color: rgba(0, 0, 0, .35); padding-inline: 16px; }
+.btn-quiet:hover, .btn-quiet[aria-current] { background: transparent; border-color: var(--ink); color: var(--ink); box-shadow: inset 0 -3px 0 var(--orange); }
+.on-dark .btn-quiet { color: var(--wall); border-color: rgba(242, 242, 242, .45); }
+.on-dark .btn-quiet:hover { color: var(--wall); border-color: var(--wall); }
+.btn-lg { padding: 16px 26px; font-size: 15px; }
+:lang(ar) .btn-lg { font-size: 17px; }
+.nav .nav-ctas a::after { display: none; }
+
+/* skip link (keyboard users) */
+.skip { position: absolute; inset-inline-start: 12px; top: -60px; z-index: 100; background: var(--ink); color: var(--wall); padding: 10px 16px; text-decoration: none; font-size: 14px; transition: top .2s; }
+.skip:focus { top: 10px; outline: 2px solid var(--orange); }
+
+/* home promo: View in your space */
+.try-promo { background: linear-gradient(180deg, var(--wall), #ece6dc); padding: clamp(56px, 8vw, 110px) 0; border-top: 1px solid var(--line); }
+.try-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 80px); align-items: center; }
+.try-wall { position: relative; aspect-ratio: 4 / 3; background: linear-gradient(180deg, #e9e3d9 0 78%, #a98c6d 78% 100%); overflow: hidden; box-shadow: inset 0 -14px 0 -10px #f3f1ec; }
+.try-frame { position: absolute; left: 50%; top: 8%; width: 26%; transform: translateX(-50%); border: 6px solid #151515; box-shadow: 6px 10px 22px rgba(0, 0, 0, .28); background: #fff; animation: try-hang 5s ease-in-out infinite; }
+.try-frame img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+.try-sofa { position: absolute; left: 22%; right: 22%; bottom: 22%; height: 17%; background: #5a6670; border-radius: 18px 18px 6px 6px; box-shadow: 0 10px 0 -2px #4c5760; }
+.try-line { position: absolute; left: 22%; right: 22%; bottom: 43%; height: 3px; background: var(--orange); }
+.try-line::before, .try-line::after { content: ""; position: absolute; top: -6px; width: 14px; height: 14px; border-radius: 50%; background: var(--orange); }
+.try-line::before { left: -7px; } .try-line::after { right: -7px; }
+.try-line b { position: absolute; left: 50%; top: -30px; transform: translateX(-50%); background: var(--orange); color: var(--ink); font: 600 12px/1 "Urbanist", sans-serif; padding: 5px 8px; white-space: nowrap; }
+@keyframes try-hang { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-6px); } }
+.try-text .display { margin: 16px 0 18px; }
+.try-text .lede { margin-bottom: 28px; }
+.try-note { margin-top: 12px; }
+
+/* artworks banner */
+.try-strip { display: flex; align-items: center; gap: 14px; margin-top: 22px; max-width: 640px; padding: 14px 18px; background: var(--white); border: 1px solid var(--line); border-inline-start: 4px solid var(--orange); text-decoration: none; color: var(--ink); transition: border-color .2s, transform .2s; }
+.try-strip .ico { width: 26px; height: 26px; color: var(--orange-ink); flex: none; }
+.try-strip span { font-size: 15px; line-height: 1.4; }
+.try-strip b { font-weight: 600; }
+.try-strip .arrow { margin-inline-start: auto; font-size: 18px; transition: transform .2s; }
+.try-strip:hover { border-color: var(--orange); }
+.try-strip:hover .arrow { transform: translateX(4px); }
+[dir="rtl"] .try-strip:hover .arrow { transform: translateX(-4px); }
+
+/* contact page */
+.contact-page { padding-top: clamp(56px, 8vw, 110px); min-height: 70vh; }
+
+/* D1: small orange text on light backgrounds uses the darker orange */
+.level, .card .no, .proj-card .no, .show-chips .no, .tl-no, .wc-more, .picked .av, .tl-tag, .section-lede b, .hl, .h-sec span, .chips button[aria-pressed="true"] span { color: var(--orange-ink); }
+.picked .av, .tl-tag { border-color: var(--orange-ink); }
+.on-dark .level, .on-dark .h-sec span, .site-footer .level, .proj-hero .level { color: var(--orange); }
+.wc-more { color: var(--wall); }
+.chips button[aria-pressed="true"] span { color: var(--orange); }
+
+/* D3: on phones, a photo near the top of the home page */
+@media (max-width: 960px) {
+  .hero .wrap { gap: 28px; }
+  .hero-stack { order: -1; margin-bottom: 52px; }
+  .hero-a img { aspect-ratio: 4 / 3; object-position: 50% 55%; }
+  .hero-a figcaption { position: static; padding-top: 6px; max-width: 40%; font-size: 12px; line-height: 1.35; }
+  .hero-b figcaption { font-size: 12px; line-height: 1.35; }
+  .hero-b { grid-column: 6 / 13; margin-bottom: -40px; }
+  .hero-b img { aspect-ratio: 4 / 3; }
+  .try-grid { grid-template-columns: 1fr; }
+}
+
+/* D4: never leave content invisible if scripts are slow or blocked */
+.reveal:not(.in), .wcard:not(.in) { animation: reveal-failsafe 0s linear 2.5s forwards; }
+@keyframes reveal-failsafe { to { opacity: 1; transform: none; } }
+
+/* D5: the room preview on phones stays below the menu bar when it slides back in */
+@media (max-width: 960px) {
+  .stage-col { transition: top .45s cubic-bezier(.2, .7, .2, 1); }
+  .site-header:not(.is-hidden) ~ main .stage-col { top: 77px; }
+}
+
+/* D7: Arabic pages say the biography is in English */
+.bio-note { font-size: 13px; color: var(--muted); margin-bottom: -18px; }
+
+/* mobile menu: the two calls to action stacked, full width */
+@media (max-width: 1080px) {
+  .nav-ctas { flex-direction: column; align-items: stretch; width: 100%; gap: 10px; margin-top: 20px; }
+  .nav-ctas .btn { justify-content: center; margin-top: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .try-frame { animation: none; } }
