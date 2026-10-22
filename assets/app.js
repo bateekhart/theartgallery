@@ -114,7 +114,8 @@
   for (const [exId, rows] of Object.entries(WORKS)) {
     rows.forEach((r, i) => ALL.push({
       ex: exId, i, artist: r[0], title: r[1], size: r[2], year: r[3], medium: r[4], notes: r[5],
-      imgs: (r[6] || []).map(([f, w, h]) => ({ f, w, h }))
+      // a 4th value of 1 marks a photo of a whole set of frames (not usable at one piece's size)
+      imgs: (r[6] || []).map(([f, w, h, set]) => ({ f, w, h, set: !!set }))
     }));
   }
   const chrono = EX.map((e, i) => ({ e, i }));
@@ -135,7 +136,7 @@
   const meta = w => [fmtSize(w.size), w.year, w.medium].filter(Boolean).map(esc).join(' · ');
   // real size in cm for wall pieces: two numbers (a third, if any, is a small depth)
   const dims = w => {
-    if (!w.imgs.length || /\bh\b|variable/i.test(w.size)) return null;
+    if (!w.imgs.length || w.imgs[0].set || /\bh\b|variable/i.test(w.size)) return null;
     const n = (w.size.split('/')[0].match(/\d+(?:\.\d+)?/g) || []).map(Number);
     if (n.length < 2 || (n.length === 3 && n[2] > 6) || n.length > 3) return null;
     const [a, b] = n, im = w.imgs[0], r = im.w / im.h;
