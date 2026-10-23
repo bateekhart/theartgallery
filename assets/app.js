@@ -27,6 +27,7 @@
   // ---------- Strings
   const T = AR ? {
     home: 'الرئيسية', exhibitions: 'المعارض', artworks: 'الأعمال', artists: 'الفنانون', about: 'من نحن', work: 'تعاون معنا',
+    notice: 'مساحتنا في الشيخ زايد مغلقة أمام الزوار للتجديد. التنسيق والتأجير متاحان.', noticeLink: 'تواصل معنا', noticeShort: 'مغلق للتجديد · التنسيق والتأجير متاحان',
     lang: 'English', langCode: 'en', menu: 'فتح القائمة', close: 'إغلاق', prev: 'السابق', next: 'التالي',
     no: 'رقم', hosted: 'استضافة', artist1: 'فنان', artistsN: 'فنانًا', work1: 'عمل', worksN: 'عملًا',
     all: 'الكل', search: 'ابحث بالفنان أو العنوان', searchArtists: 'ابحث عن فنان', noMatch: 'لا توجد نتائج.',
@@ -39,6 +40,7 @@
     pause: 'إيقاف', play: 'تشغيل', exhibition: 'المعرض', artist: 'الفنان', count: 'عدد', years: 'السنوات', space: 'شاهدها في مساحتك', byArtist: 'الأعمال حسب الفنان', skip: 'انتقل إلى المحتوى', bioEn: 'النبذة بالإنجليزية', trySpace: 'جرّبه على جدارك', tryLede: 'أضف صورة جدارك واختر عملًا لتراه بمقاسه الحقيقي، ثم اطلب شراءه من أي مكان في العالم.', tryBtn: 'جرّب الآن', projects: 'مشروعات التنسيق', projectsLede: 'خارج معارضنا، ننسّق الفن للمساحات السكنية والتجارية.', viewProject: 'شاهد المشروع', installed: 'ما تم تركيبه', piecesN: 'قطع', inProjects: 'في مشروعات التنسيق', photos: 'صور المشروع', place: 'المكان', setNote: 'صور من أعمال الفنان في المعرض'
   } : {
     home: 'Home', exhibitions: 'Exhibitions', artworks: 'Artworks', artists: 'Artists', about: 'About', work: 'Work with us',
+    notice: 'Our Sheikh Zayed space is closed to visitors for renovation. Curation and rentals are open.', noticeLink: 'Get in touch', noticeShort: 'Closed for renovation · curation & rentals open',
     lang: 'عربي', langCode: 'ar', menu: 'Open menu', close: 'Close', prev: 'Previous', next: 'Next',
     no: 'No.', hosted: 'Hosted', artist1: 'artist', artistsN: 'artists', work1: 'artwork', worksN: 'artworks',
     all: 'All', search: 'Search by artist or title', searchArtists: 'Search artists', noMatch: 'Nothing matches that search.',
@@ -157,13 +159,19 @@
     if (main && !main.id) main.id = 'main';
     header.innerHTML = `
       <a class="skip" href="#${main ? main.id : 'main'}">${T.skip}</a>
-      <div class="wrap">
+      <div class="h-strip">
+        <div class="wrap">
+          <p class="notice-full"><i class="dot" aria-hidden="true"></i>${T.notice} <a href="${url.work}">${T.noticeLink} <span aria-hidden="true">${AR ? '←' : '→'}</span></a></p>
+          <a class="notice-short" href="${url.work}"><i class="dot" aria-hidden="true"></i>${T.noticeShort}</a>
+          <a class="lang" href="${OTHER}${B.path || ''}${location.search}" hreflang="${T.langCode}" lang="${T.langCode}">${T.lang}</a>
+        </div>
+      </div>
+      <div class="wrap h-main">
         <a class="brand" href="${url.home}" aria-label="the ART GALLERY, ${esc(T.home)}">
           <img class="logo" src="${BASE}assets/logo.png" alt="the ART GALLERY" width="900" height="288">
         </a>
         <nav class="nav" id="nav">
-          ${navItems.map(([k, h]) => `<a href="${h}"${active[k].includes(PAGE) ? ' aria-current="page"' : ''}>${T[k]}</a>`).join('')}
-          <a class="lang" href="${OTHER}${B.path || ''}${location.search}" hreflang="${T.langCode}" lang="${T.langCode}">${T.lang}</a>
+          <span class="nav-links">${navItems.map(([k, h]) => `<a href="${h}"${active[k].includes(PAGE) ? ' aria-current="page"' : ''}>${T[k]}</a>`).join('')}</span>
           <span class="nav-ctas">
             <a class="btn btn-quiet" href="${url.work}"${PAGE === 'contact' ? ' aria-current="page"' : ''}>${T.work}</a>
             <a class="btn btn-try" href="${url.space()}"${PAGE === 'space' ? ' aria-current="page"' : ''}>${FRAME_ICON}<span>${T.space}</span></a>
