@@ -36,7 +36,7 @@
     about1: 'نبذة', prevEx: 'المعرض السابق', nextEx: 'المعرض التالي', prevArtist: 'الفنان السابق', nextArtist: 'الفنان التالي',
     notFound: 'لم نجد هذه الصفحة.', backTo: 'العودة إلى', cm: 'سم', of: 'من', shown: 'معروضة', more: 'عرض المزيد',
     keyVisual: 'الهوية البصرية لمعرض', photoOf: 'صورة', portraitOf: 'صورة', curated: 'تنسيق', hostedLabel: 'معرض مستضاف',
-    beyond: 'خارج الجاليري', email: 'البريد', instagram: 'إنستجرام', rights: 'ذا آرت جاليري', view: 'عرض', slide: 'شريحة',
+    beyond: 'خارج الجاليري', email: 'البريد', instagram: 'إنستجرام', whatsapp: 'واتساب', rights: 'ذا آرت جاليري', view: 'عرض', slide: 'شريحة',
     pause: 'إيقاف', play: 'تشغيل', exhibition: 'المعرض', artist: 'الفنان', count: 'عدد', years: 'السنوات', space: 'شاهدها في مساحتك', byArtist: 'الأعمال حسب الفنان', skip: 'انتقل إلى المحتوى', bioEn: 'النبذة بالإنجليزية', trySpace: 'جرّبه على جدارك', tryLede: 'أضف صورة جدارك واختر عملًا لتراه بمقاسه الحقيقي، ثم اطلب شراءه من أي مكان في العالم.', tryBtn: 'جرّب الآن', projects: 'مشروعات التنسيق', projectsLede: 'خارج معارضنا، ننسّق الفن للمساحات السكنية والتجارية.', viewProject: 'شاهد المشروع', installed: 'ما تم تركيبه', piecesN: 'قطع', inProjects: 'في مشروعات التنسيق', photos: 'صور المشروع', place: 'المكان', setNote: 'صور من أعمال الفنان في المعرض'
   } : {
     home: 'Home', exhibitions: 'Exhibitions', artworks: 'Artworks', artists: 'Artists', about: 'About', work: 'Work with us',
@@ -49,7 +49,7 @@
     about1: 'About', prevEx: 'Previous exhibition', nextEx: 'Next exhibition', prevArtist: 'Previous artist', nextArtist: 'Next artist',
     notFound: "We couldn't find that page.", backTo: 'Back to', cm: 'cm', of: 'of', shown: 'shown', more: 'Show more',
     keyVisual: 'Key visual for', photoOf: 'Photo of', portraitOf: 'Portrait of', curated: 'Curated', hostedLabel: 'Hosted exhibition',
-    beyond: 'Beyond the gallery', email: 'Email', instagram: 'Instagram', rights: 'the ART GALLERY', view: 'View', slide: 'Slide',
+    beyond: 'Beyond the gallery', email: 'Email', instagram: 'Instagram', whatsapp: 'WhatsApp', rights: 'the ART GALLERY', view: 'View', slide: 'Slide',
     pause: 'Pause', play: 'Play', exhibition: 'Exhibition', artist: 'Artist', count: 'Count', years: 'Years', space: 'View in your space', byArtist: 'Works by artist', skip: 'Skip to content', bioEn: 'Biography in English', trySpace: 'See it on your wall', tryLede: 'Add a photo of your wall, pick a piece and see it at its real size, then request it from anywhere in the world.', tryBtn: 'Try it now', projects: 'Curation projects', projectsLede: 'Beyond our exhibitions, we curate art for residential and commercial spaces.', viewProject: 'View project', installed: 'What we installed', piecesN: 'pieces', inProjects: 'In our curation projects', photos: 'The space', place: 'Place', setNote: "Photos of the artist's works in the show"
   };
 
@@ -214,7 +214,8 @@
           <nav aria-label="${esc(T.home)}">${navItems.map(([k, h]) => `<a href="${h}">${T[k]}</a>`).join('')}<a href="${url.space()}">${T.space}</a><a href="${url.work}">${T.work}</a></nav>
           <nav aria-label="${esc(T.instagram)}">
             <a href="mailto:info@theartgallery.world" dir="ltr">info@theartgallery.world</a>
-            <a href="https://www.instagram.com/theartgallery_eg/" dir="ltr">@theartgallery_eg</a>
+            <a href="https://www.instagram.com/theartgallery.world/">${T.instagram} · <bdi dir="ltr">@theartgallery.world</bdi></a>
+            <a href="https://wa.me/theartgallery.world">${T.whatsapp} · <bdi dir="ltr">@theartgallery.world</bdi></a>
             <a href="https://linktr.ee/theartgallery_eg">Linktree</a>
             <a href="${OTHER}${B.path || ''}${location.search}" hreflang="${T.langCode}" lang="${T.langCode}">${T.lang}</a>
           </nav>
