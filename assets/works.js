@@ -425,7 +425,7 @@ window.WORKS = {
 ["Mariam Abdelhay","Red Pain","42x72","2024","Mixed media on wood","",[["upcycled-narratives-ii--mariam-abdelhay--red-pain-0",873,640]]],
 ["Mariam Abdelhay","Marie Antoinette","35x50","2023","Glass on wood","",[["upcycled-narratives-ii--mariam-abdelhay--marie-antoinette-0",396,544]]],
 ["Mariam Abdelhay","Ocean Goddess","35x50","2024","Glass and mixed media on wood","",[["upcycled-narratives-ii--mariam-abdelhay--ocean-goddess-0",396,544]]],
-["Mariam Fawzy","Renewal","","2025","Mixed media installation",""],
+["Mariam Fawzy","Renewal","","2025","Mixed media installation","",[["upcycled-narratives-ii--mariam-fawzy--renewal-0",960,1400]]],
 ["Mirna Isac","The family","20x25x45","2022","Welding Metal","",[["upcycled-narratives-ii--mirna-isac--the-family-0",482,1102]]],
 ["Mirna Isac","Souls connections","50x20x15","2022","Welding Metal","A collection of 2",[["upcycled-narratives-ii--mirna-isac--souls-connections-0",896,1142,1]]],
 ["Mohamed Abdelrahman","GRASS","","2023","Grass & recycled paper Installation",""],
