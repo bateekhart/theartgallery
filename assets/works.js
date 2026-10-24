@@ -45,7 +45,7 @@ window.WORKS = {
 ["Hossam AbulEla","Reflections","103x103","","Acrylic on canvas","",[["memory--hossam-abulela--reflections-25-0",1097,1011]]],
 ["Kenzy Turky","Imploded","100x70","2021","Oil on canvas","",[["memory--kenzy-turky--imploded",1046,1400]]],
 ["Lana Gul","Archives 01","50x70","2022","Oil on canvas","",[]],
-["Mahi Tarek","El Matador","120x80","2022","Mixed media","",[]],
+["Mahi Tarek","El Matador","120x80","2022","Mixed media","",[["memory--mahi-tarek--el-matador",1800,1200]]],
 ["Manar Magdy","Immersed in the depth of memory","50x70","2022","Digital illustration printed on wood","",[["memory--manar-magdy--immersed-in-the-depth-of-memory",1500,2100]]],
 ["Mayar Attia","Untitled","21x29.7","2021","Photograph taken on Olympus camera, Kodak ColorPlus 200","Edition 1/7",[["memory--mayar-attia--untitled-30-0",565,404]]],
 ["Mostafa Hedayat","Memorial spectrums","85x30","2022","Digital collage print","",[["memory--mostafa-hedayat--memorial-spectrums",1762,570]]],
