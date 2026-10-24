@@ -801,7 +801,7 @@
       lineIs: 'The orange line is', cm: 'cm', adjust: 'Adjust the line', done: 'Done',
       wallIs: 'Your photo shows about', m: 'm across', pick: 'Choose an artwork', allEx: 'All exhibitions', search: 'Search by artist or title',
       width: 'Width', height: 'Height', swap: 'Swap', frame: 'Frame', none: 'None', black: 'Black', white: 'White', oak: 'Oak',
-      mat: 'White mat', light: 'Light', download: 'Download image', share: 'Share', request: 'Request to purchase',
+      mat: 'White mount', light: 'Light', download: 'Download image', share: 'Share', request: 'Request to purchase',
       name: 'Your name', country: 'Country & city', notes: 'Notes (optional)', send: 'Send request by email',
       avail: 'Ask about availability', reqNote: 'We confirm price, availability and shipping anywhere in the world by email. Attach the image you downloaded so we can see your space.',
       choose: 'Choose an artwork from the list', drag: 'Drag the artwork to move it', measureHint: 'Drag the ends of the orange line onto something you know the size of, then type its length.',
