@@ -120,7 +120,12 @@ window.WORKS = {
 "self":[
 ["Abanoub Adel","A diptych of two portraits","19x28","2023","Pencil on paper","A collection of 2",[["self--abanoub-adel--diptych",1137,1095,1]]],
 ["Abanoub Adel","In bed","55x40","2023","Charcoal on paper","",[["self--abanoub-adel--in-bed",1052,728]]],
-["Abanoub Adel","Untitled","19x28","2023","Oil painting, oil pastel and markers on paper","A collection of 8",[["self--abanoub-adel--untitled-1",697,1037],["self--abanoub-adel--untitled-2",758,1092],["self--abanoub-adel--untitled-3",792,1177],["self--abanoub-adel--untitled-4",762,1097],["self--abanoub-adel--untitled-5",762,1082],["self--abanoub-adel--untitled-6",787,1132]]],
+["Abanoub Adel","Untitled","19x28","2023","Oil painting, oil pastel and markers on paper","One of a series of 6",[["self--abanoub-adel--untitled-1",697,1037]]],
+["Abanoub Adel","Untitled","19x28","2023","Oil painting, oil pastel and markers on paper","One of a series of 6",[["self--abanoub-adel--untitled-2",758,1092]]],
+["Abanoub Adel","Untitled","19x28","2023","Oil painting, oil pastel and markers on paper","One of a series of 6",[["self--abanoub-adel--untitled-3",792,1177]]],
+["Abanoub Adel","Untitled","19x28","2023","Oil painting, oil pastel and markers on paper","One of a series of 6",[["self--abanoub-adel--untitled-4",762,1097]]],
+["Abanoub Adel","Untitled","19x28","2023","Oil painting, oil pastel and markers on paper","One of a series of 6",[["self--abanoub-adel--untitled-5",762,1082]]],
+["Abanoub Adel","Untitled","19x28","2023","Oil painting, oil pastel and markers on paper","One of a series of 6",[["self--abanoub-adel--untitled-6",787,1132]]],
 ["Abdoul","A night in Giza apartment","100x100","2023","Acrylics on Canvas","",[["self--abdoul--a-night-in-giza-apartment-3-0",1034,1040]]],
 ["Abdoul","Bliss of solitude","100x100","2023","Acrylics on Canvas","",[["self--abdoul--bliss-of-solitude-4-0",1040,1040]]],
 ["Ahmed Nagy","Flourishing","40x40","2017","Acrylic on wooden panels","",[["self--ahmed-nagy--flourishing-5-0",754,754],["self--ahmed-nagy--flourishing-5-1",747,754]]],
