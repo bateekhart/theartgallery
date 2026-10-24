@@ -53,7 +53,9 @@ window.WORKS = {
 "nostalgia":[
 ["Alaa Aboelhamd","Untitled","115x135","2023","Mixed Media on Canvas","",[["nostalgia--alaa-aboelhamd--untitled-0-0",990,1162]]],
 ["Alaa Aboelhamd","Untitled","125x130","2023","Mixed Media on Canvas","",[["nostalgia--alaa-aboelhamd--untitled-1-0",1117,1162]]],
-["Asmaa Samy","Untitled","100x100","2020","Watercolour","3 works",[["nostalgia--asmaa-samy--untitled-2-0",549,549],["nostalgia--asmaa-samy--untitled-seated",876,968],["nostalgia--asmaa-samy--untitled-flowers",968,1050]]],
+["Asmaa Samy","Untitled","100x100","2020","Watercolour","",[["nostalgia--asmaa-samy--untitled-2-0",549,549]]],
+["Asmaa Samy","Untitled","100x100","2020","Watercolour","",[["nostalgia--asmaa-samy--untitled-seated",876,968]]],
+["Asmaa Samy","Untitled","100x100","2020","Watercolour","",[["nostalgia--asmaa-samy--untitled-flowers",968,1050]]],
 ["Asmaa Samy","Woman with cat","70x100","2019","Watercolour","",[["nostalgia--asmaa-samy--woman-with-cat-wall",900,1296]]],
 ["Asmaa Samy","Portrait 1","30x40","2020","Watercolour on Canvas","",[["nostalgia--asmaa-samy--portrait-1-wall",423,580]]],
 ["Asmaa Samy","Portrait 2","30x40","2020","Watercolour on Canvas","",[["nostalgia--asmaa-samy--portrait-2-wall",428,582]]],
