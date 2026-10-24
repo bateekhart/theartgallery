@@ -103,7 +103,7 @@ window.WORKS = {
 ["Dalia Negm","قاصرات","90x50","2020","Acrylics on wood","",[["trauma--dalia-negm--work-12-0",1248,762]]],
 ["Dalia Negm","قاصرات","50x70","2020","Acrylics on wood","",[["trauma--dalia-negm--work-13-0",594,762]]],
 ["Dalia Negm","حوار انثوي","25x18","2023","Mixed media on paper","8 works",[["trauma--dalia-negm--work-14-0",439,588],["trauma--dalia-negm--work-14-1",441,588],["trauma--dalia-negm--work-14-2",441,588],["trauma--dalia-negm--work-14-3",442,588]]],
-["Ghada Waleed","حبيبه","21x36","2022","Mixed media on paper","",[["trauma--ghada-waleed--habiba",695,820]]],
+["Ghada Waleed","حبيبه","21x26","2022","Mixed media on paper","",[["trauma--ghada-waleed--habiba",695,820]]],
 ["Ghada Waleed","٥ امنيات","50x35","2020","Mixed media on paper","",[["trauma--ghada-waleed--5-amaniyat",1200,838]]],
 ["Ghada Waleed","خدود ناشفة","50x35","2022","Mixed media on paper","",[["trauma--ghada-waleed--khodod-nashfa",1190,823]]],
 ["Ghada Waleed","أمراض نفسيه وعصبيه","35x50","2023","Mixed media on paper","",[["trauma--ghada-waleed--amrad-nafsiya",798,1062]]],
