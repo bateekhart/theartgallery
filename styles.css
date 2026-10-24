@@ -478,6 +478,8 @@ button { font: inherit; color: inherit; }
 .wc-artist { font-family: "Urbanist", sans-serif; font-size: 15px; text-decoration: none; justify-self: start; }
 .wc-artist:hover, .wc-ex:hover { color: var(--orange); }
 .wc-meta { font-size: 13px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
+.wc-name { text-decoration: none; justify-self: start; }
+.wc-name:hover { color: var(--orange); }
 .wc-ex { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-decoration: none; margin-top: 6px; justify-self: start; }
 :lang(ar) .wc-ex { letter-spacing: 0; font-size: 14px; }
 .wcard.is-text { background: var(--white); padding: 22px 20px 20px; border-top: 2px solid var(--ink); }

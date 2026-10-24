@@ -593,9 +593,6 @@
         <div class="wrap">
           <div class="bar reveal">
             <h2 class="h-sec">${T.worksIn}</h2>
-            ${names.length > 1 ? `<label class="select"><span class="visually-hidden">${T.artist}</span>
-              <select id="artist-filter"><option value="">${T.all} · ${plural(names.length, 'artistsN')}</option>
-              ${[...new Set(shown.map(w => w.artist))].sort().map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select></label>` : ''}
           </div>
           <ul class="masonry" id="ex-works"></ul>
         </div>
@@ -637,11 +634,27 @@
           ${next ? `<a class="pg next" href="${url.ex(next.id)}"><span class="pg-k">${T.nextEx}</span><span class="pg-t">${esc(L(next, 'title'))}</span></a>` : '<span></span>'}
         </div>
       </nav>`;
+    // one card per artist; it opens every photographed piece the artist showed here
     const ul = $('#ex-works');
     if (ul) {
-      const draw = name => renderWorks(ul, name ? shown.filter(w => w.artist === name) : shown, { ex: false, page: 400 });
-      draw('');
-      const sel = $('#artist-filter'); if (sel) sel.onchange = () => draw(sel.value);
+      const groups = [...new Set(shown.map(w => w.artist))].sort((a, b) => a.localeCompare(b))
+        .map(name => ({ name, list: shown.filter(w => w.artist === name), n: countWorks(works.filter(w => w.artist === name)) }));
+      ul.innerHTML = groups.map((g, k) => {
+        const im = g.list[0].imgs[0], more = g.list.reduce((m, w) => m + w.imgs.length, 0) - 1;
+        return `<li class="wcard">
+          <button class="wc-img" type="button" data-group="${k}" style="aspect-ratio:${im.w}/${im.h}" aria-label="${esc(T.view)}: ${esc(g.name)}">
+            <img src="${workSrc(im.f, true)}" alt="${esc(g.list[0].title)}, ${esc(g.name)}" loading="lazy" width="${im.w}" height="${im.h}">
+            ${more > 0 ? `<span class="wc-more">+${num(more)}</span>` : ''}
+          </button>
+          <a class="wc-title wc-name" href="${url.artist(g.name)}" dir="ltr">${esc(g.name)}</a>
+          <span class="wc-meta">${plural(g.n, 'worksN')}</span>
+        </li>`;
+      }).join('');
+      ul.onclick = ev => {
+        const b = ev.target.closest('[data-group]'); if (!b) return;
+        lbOpen(slidesFor(groups[+b.dataset.group].list, { ex: false }), 0);
+      };
+      revealIn(ul);
     }
     const vl = $('#views');
     if (vl) {
