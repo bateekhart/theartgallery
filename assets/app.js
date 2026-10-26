@@ -77,7 +77,7 @@
     ex: id => `${ROOT}exhibition/?id=${id}`, artist: name => `${ROOT}artist/?a=${slug(name)}`,
     artworks: id => ROOT + 'artworks/' + (id ? `?ex=${id}` : ''), work: ROOT + 'contact/',
     space: w => ROOT + 'space/' + (w ? `?w=${w.ex}.${w.i}` : ''),
-    project: id => `${ROOT}project/?id=${id}`
+    project: id => `${ROOT}project/?id=${id}`, portfolio: ROOT + 'portfolio/'
   };
   const img = (p, w) => BASE + p;
   const workSrc = (f, thumb) => `${BASE}assets/img/works/${thumb ? 't/' : ''}${f}.jpg`;
@@ -768,6 +768,7 @@
             <a class="crumb" href="${url.artists}">${AR ? '→' : '←'} ${T.artists}</a>
             <h1 class="display" dir="ltr">${esc(a.name)}</h1>
             ${BIOS[a.name] ? `${AR ? `<p class="bio-note">${T.bioEn}</p>` : ''}<p class="bio" dir="ltr" lang="en">${esc(BIOS[a.name])}</p>` : ''}
+            ${a.name === 'Rana Khalil' ? `<p><a class="btn btn-try pf-cta" href="${url.portfolio}">${AR ? 'شاهد ملف أعمالها الكامل' : 'See her full portfolio'} <span class="arrow" aria-hidden="true">${AR ? '←' : '→'}</span></a></p>` : ''}
             <p class="eyebrow">${T.exhibitedIn}</p>
             <ul class="show-chips">${shows.map(s => `<li><a href="${url.ex(s.id)}"><span class="no">${label(s)}</span> ${esc(L(s, 'title'))} <span class="y">${num(s.year)}</span></a></li>`).join('')}</ul>
             ${PROJECTS.some(p => p.works.some(w => w.artist === a.name)) ? `<p class="eyebrow" style="margin-top:22px">${T.inProjects}</p>
@@ -1112,6 +1113,86 @@
     addEventListener('resize', () => { clearTimeout(fit.t); fit.t = setTimeout(fit, 100); });
     list(); fit();
     const want = params.get('w'); if (want) want.split(',').forEach(id => add(id, { quiet: true }));
+  };
+
+  // ---------- Rana Khalil's portfolio (her own work, for grants and residencies)
+  pages.portfolio = () => {
+    const P = window.PORTFOLIO; const main = $('#main');
+    if (!P) return;
+    const S = AR ? { kicker: 'أعمال فنية', statement: 'عن الممارسة', bio: 'نبذة', works: 'الأعمال', cv: 'السيرة الذاتية', contact: 'تواصل', shows: 'معارض', commissions: 'أعمال بالتكليف', curation: 'تنسيق فني', teaching: 'تدريس', education: 'التعليم', awards: 'جوائز ومسابقات', languages: 'اللغات', galleryLink: 'المعارض التي نسّقتها', series: 'سلسلة', inquire: 'للاستفسار عن الأعمال أو التعاون أو الإقامات الفنية', view: 'عرض', of: 'من' }
+      : { kicker: 'Portfolio', statement: 'Statement', bio: 'Biography', works: 'Work', cv: 'CV', contact: 'Contact', shows: 'Exhibitions', commissions: 'Commissions', curation: 'Curation', teaching: 'Teaching', education: 'Education', awards: 'Awards and competitions', languages: 'Languages', galleryLink: 'Exhibitions I have curated', series: 'Series', inquire: 'For works, commissions, collaborations and residencies', view: 'View', of: 'of' };
+    const src = (f, t) => `${BASE}assets/img/portfolio/${t ? 't/' : ''}${f}.jpg`;
+    const ar = (o, k) => AR && o[k + 'Ar'] ? o[k + 'Ar'] : o[k];
+    // every image on the page, in order, for the viewer
+    const slides = [];
+    const cap = (t, m) => `<span class="lb-artist" dir="ltr">Rana Khalil</span><span class="lb-title" dir="auto">${esc(t)}</span>${m ? `<span class="lb-meta" dir="auto">${esc(m)}</span>` : ''}`;
+    const add = (im, t, m) => { slides.push({ src: src(im[0]), alt: `${t}, Rana Khalil`, cap: cap(t, m) }); return slides.length - 1; };
+    const line = w => [w.m, w.s, w.y].filter(Boolean).join(' · ');
+    const fig = (w, cls = '') => {
+      const k = add(w.img, w.t, [line(w), w.note].filter(Boolean).join(' · '));
+      return `<figure class="pf-work ${cls} reveal"><button type="button" data-k="${k}" style="aspect-ratio:${w.img[1]}/${w.img[2]}" aria-label="${S.view}: ${esc(w.t)}"><img src="${src(w.img[0], true)}" alt="${esc(w.t)}, Rana Khalil" loading="lazy" width="${w.img[1]}" height="${w.img[2]}"></button>
+        <figcaption><span class="t" dir="ltr">${esc(w.t)}</span>${line(w) ? `<span class="m" dir="ltr">${esc(line(w))}</span>` : ''}${w.note ? `<span class="n" dir="ltr">${esc(w.note)}</span>` : ''}</figcaption></figure>`;
+    };
+    const group = g => {
+      const ks = g.imgs.map(im => add(im, g.t, [g.m, g.y].join(' · ')));
+      return `<div class="pf-group reveal"><div class="pf-group-head"><h3 dir="ltr">${esc(g.t)}</h3><p dir="ltr">${esc([g.m, g.y].join(' · '))}${g.shown ? `<br><span class="n">${esc(g.shown)}</span>` : ''}</p></div>
+        <ul class="pf-strip">${g.imgs.map((im, j) => `<li style="flex:${(im[1] / im[2]).toFixed(3)}"><button type="button" data-k="${ks[j]}" aria-label="${S.view}: ${esc(g.t)} ${num(j + 1)} ${S.of} ${num(g.imgs.length)}"><img src="${src(im[0], true)}" alt="${esc(g.t)}, Rana Khalil" loading="lazy" width="${im[1]}" height="${im[2]}"></button></li>`).join('')}</ul></div>`;
+    };
+    const rows = (list) => `<dl class="pf-cv-list">${list.map(([y, t]) => `<div><dt>${esc(y)}</dt><dd dir="ltr">${esc(t)}</dd></div>`).join('')}</dl>`;
+    const series = P.series;
+    main.innerHTML = `
+      <section class="pf-hero">
+        <div class="pf-hero-img"><img src="${src(P.cover[0])}" alt="${AR ? 'تفصيل من لوحة Purple Sea، ٢٠٢٦' : 'Detail of Purple Sea, 2026'}" data-parallax=".1"></div>
+        <div class="wrap pf-hero-text reveal">
+          <p class="eyebrow"><span class="level">${S.kicker}</span> ${esc(ar(P, 'role'))}</p>
+          <h1 class="display" dir="ltr">Rana<span>Khalil</span></h1>
+          <p class="pf-line" ${AR ? 'lang="ar"' : ''}>${esc(ar(P, 'line'))}</p>
+          <nav class="pf-index" aria-label="${S.works}">${series.map((s, i) => `<a href="#${s.id}"><span class="no">${num(i + 1).padStart(2, AR ? '٠' : '0')}</span> ${esc(ar(s, 'title'))}</a>`).join('')}<a href="#cv"><span class="no">—</span> ${S.cv}</a></nav>
+        </div>
+      </section>
+
+      <section class="section pf-statement" id="statement">
+        <div class="wrap pf-two">
+          <div class="reveal"><p class="eyebrow">${S.statement}</p><h2 class="display">${esc(ar(P, 'statementTitle'))}</h2></div>
+          <div class="pf-prose reveal">${(AR ? P.statementAr : P.statement).map(p => `<p>${esc(p)}</p>`).join('')}
+            <blockquote lang="ar" dir="rtl">${esc(P.lineAr)}</blockquote>
+            <p class="eyebrow" style="margin-top:36px">${S.bio}</p><p>${esc(ar(P, 'bio'))}</p></div>
+        </div>
+      </section>
+
+      ${series.map((s, i) => `
+      <section class="section tight pf-series pf-${s.id}" id="${s.id}">
+        <div class="wrap">
+          <div class="pf-series-head reveal">
+            <span class="no">${num(i + 1).padStart(2, AR ? '٠' : '0')}</span>
+            <div><h2 class="h-sec">${esc(ar(s, 'title'))} ${s.years ? `<span>${esc(s.years)}</span>` : ''}</h2>
+            <p>${esc(ar(s, 'intro'))}</p></div>
+          </div>
+          ${s.works[0] && s.works[0].group ? s.works.map(w => group(w.group)).join('') : `<div class="pf-grid">${s.works.map(w => fig(w)).join('')}</div>`}
+        </div>
+      </section>`).join('')}
+
+      <section class="section pf-cv on-dark" id="cv">
+        <div class="wrap">
+          <div class="pf-series-head reveal"><span class="no">—</span><div><h2 class="h-sec">${S.cv}</h2></div></div>
+          <div class="pf-cv-grid">
+            <div class="reveal"><h3>${S.shows}</h3>${rows(P.cv.shows)}<h3>${S.commissions}</h3>${rows(P.cv.commissions)}</div>
+            <div class="reveal"><h3>${S.curation}</h3>${rows(P.cv.curation)}<p><a class="link-arrow" href="${url.exhibitions}">${S.galleryLink} <span aria-hidden="true">${AR ? '←' : '→'}</span></a></p>
+              <h3>${S.teaching}</h3>${rows(P.cv.teaching)}<h3>${S.education}</h3>${rows(P.cv.education)}<h3>${S.awards}</h3>${rows(P.cv.awards)}
+              <h3>${S.languages}</h3><p dir="ltr">${esc(P.cv.languages)}</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section pf-contact" id="contact">
+        <div class="wrap reveal">
+          <p class="eyebrow">${S.contact}</p>
+          <h2 class="display">${S.inquire}</h2>
+          <p class="pf-links"><a href="mailto:${P.email}" dir="ltr">${P.email}</a><a href="https://www.instagram.com/${P.instagram}/" dir="ltr">Instagram · @${P.instagram}</a></p>
+        </div>
+      </section>`;
+    main.onclick = e => { const b = e.target.closest('[data-k]'); if (b) lbOpen(slides, +b.dataset.k); };
+    revealIn(main); parallax();
   };
 
   // ---------- Curation project
