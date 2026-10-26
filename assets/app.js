@@ -1119,8 +1119,8 @@
   pages.portfolio = () => {
     const P = window.PORTFOLIO; const main = $('#main');
     if (!P) return;
-    const S = AR ? { kicker: 'أعمال فنية', statement: 'عن الممارسة', bio: 'نبذة', works: 'الأعمال', cv: 'السيرة الذاتية', contact: 'تواصل', shows: 'معارض', commissions: 'أعمال بالتكليف', curation: 'تنسيق فني', teaching: 'تدريس', education: 'التعليم', awards: 'جوائز ومسابقات', languages: 'اللغات', galleryLink: 'المعارض التي نسّقتها', series: 'سلسلة', inquire: 'للاستفسار عن الأعمال أو التعاون أو الإقامات الفنية', view: 'عرض', of: 'من' }
-      : { kicker: 'Portfolio', statement: 'Statement', bio: 'Biography', works: 'Work', cv: 'CV', contact: 'Contact', shows: 'Exhibitions', commissions: 'Commissions', curation: 'Curation', teaching: 'Teaching', education: 'Education', awards: 'Awards and competitions', languages: 'Languages', galleryLink: 'Exhibitions I have curated', series: 'Series', inquire: 'For works, commissions, collaborations and residencies', view: 'View', of: 'of' };
+    const S = AR ? { kicker: 'أعمال فنية', statement: 'عن الممارسة', bio: 'نبذة', works: 'الأعمال', cv: 'السيرة الذاتية', contact: 'تواصل', shows: 'معارض', commissions: 'أعمال بالتكليف', curation: 'تنسيق فني', teaching: 'تدريس', education: 'التعليم', awards: 'جوائز ومسابقات', languages: 'اللغات', galleryLink: 'المعارض التي نسّقتها', series: 'سلسلة', inquire: 'للتعاون أو الأعمال بالتكليف', view: 'عرض', of: 'من' }
+      : { kicker: 'Portfolio', statement: 'Statement', bio: 'Biography', works: 'Work', cv: 'CV', contact: 'Contact', shows: 'Exhibitions', commissions: 'Commissions', curation: 'Curation', teaching: 'Teaching', education: 'Education', awards: 'Awards and competitions', languages: 'Languages', galleryLink: 'Exhibitions I have curated', series: 'Series', inquire: 'For collaborations or commissions', view: 'View', of: 'of' };
     const src = (f, t) => `${BASE}assets/img/portfolio/${t ? 't/' : ''}${f}.jpg`;
     const ar = (o, k) => AR && o[k + 'Ar'] ? o[k + 'Ar'] : o[k];
     // every image on the page, in order, for the viewer
