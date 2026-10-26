@@ -70,6 +70,7 @@
             <label class="search"><span class="visually-hidden">ابحث</span><input id="pick-q" type="search" placeholder="ابحث بالفنان أو العنوان" autocomplete="off"></label>
           </div>
           <ul class="pick-grid" id="pick-grid"></ul>
+          <p class="small">اضغط على عمل لتضيفه إلى الجدار. يمكنك إضافة أكثر من عمل، ثم اختر أي عمل على الجدار لتضبطه.</p>
         </section>
 
         <section class="step" id="tune" hidden>
@@ -82,13 +83,19 @@
           <div class="row chips" id="frames" role="group" aria-label="الإطار">
             <span class="lbl">الإطار</span>
             <button type="button" data-frame="none" aria-pressed="false">بدون</button>
-            <button type="button" data-frame="black" aria-pressed="true">أسود</button>
-            <button type="button" data-frame="white" aria-pressed="false">أبيض</button>
-            <button type="button" data-frame="oak" aria-pressed="false">خشب</button>
+            <button type="button" data-frame="black" aria-pressed="true">أسود رفيع</button>
+            <button type="button" data-frame="white" aria-pressed="false">أبيض للمعارض</button>
+            <button type="button" data-frame="oak" aria-pressed="false">خشب طبيعي</button>
+          </div>
+          <div class="row">
+            <label class="field range">عرض الإطار <input id="fw" type="range" min="1" max="10" step=".5" value="3"> <output id="fw-out" dir="ltr">3 سم</output></label>
           </div>
           <div class="row">
             <label class="check"><input id="mat" type="checkbox"> حافة بيضاء</label>
             <label class="field range">الإضاءة <input id="light" type="range" min=".6" max="1.15" step=".01" value="1"></label>
+          </div>
+          <div class="row">
+            <button class="btn ghost small-btn" id="remove" type="button">احذف هذا العمل من الجدار</button>
           </div>
         </section>
 

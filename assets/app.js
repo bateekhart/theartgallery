@@ -112,6 +112,9 @@
 
   // ---------- Data model
   const exById = Object.fromEntries(EX.map(e => [e.id, e]));
+  // a work belongs to an exhibition, or (WORKS key = project id) to a curation project
+  const placeOf = w => { const e = exById[w.ex]; if (e) return { href: url.ex(e.id), title: L(e, 'title'), year: e.year };
+    const p = PROJECTS.find(x => x.id === w.ex); return p ? { href: url.project(p.id), title: L(p, 'title'), year: p.year } : null; };
   const ALL = [];                        // every artwork
   for (const [exId, rows] of Object.entries(WORKS)) {
     rows.forEach((r, i) => ALL.push({
@@ -121,7 +124,8 @@
     }));
   }
   const chrono = EX.map((e, i) => ({ e, i }));
-  ALL.sort((a, b) => EX.indexOf(exById[b.ex]) - EX.indexOf(exById[a.ex]));
+  const rank = w => exById[w.ex] ? EX.indexOf(exById[w.ex]) : EX.length;
+  ALL.sort((a, b) => rank(b) - rank(a));
   const artists = new Map();
   EX.forEach(e => {
     if (e.index === false) return;
@@ -267,11 +271,11 @@
     if (Math.abs(dx) > 50) lbShow(lbAt + ((dx < 0) !== AR ? 1 : -1));
   });
   const workCap = (w, withArtist = true, withEx = true) => {
-    const e = exById[w.ex];
+    const e = placeOf(w);
     return `${withArtist ? `<a class="lb-artist" href="${url.artist(w.artist)}" dir="ltr">${esc(w.artist)}</a>` : ''}
       <span class="lb-title" dir="auto">${esc(w.title)}</span>
       ${meta(w) ? `<span class="lb-meta" dir="auto">${meta(w)}</span>` : ''}
-      ${withEx && e ? `<a class="lb-ex" href="${url.ex(e.id)}">${esc(L(e, 'title'))} · ${num(e.year)}</a>` : ''}
+      ${withEx && e ? `<a class="lb-ex" href="${e.href}">${esc(e.title)} · ${num(e.year)}</a>` : ''}
       ${dims(w) ? `<a class="lb-space" href="${url.space(w)}">${T.space} <span aria-hidden="true">${AR ? '←' : '→'}</span></a>` : ''}`;
   };
   // flatten works into viewer slides (every photo of every work)
@@ -283,14 +287,14 @@
 
   // ---------- Artwork grid
   function workCard(w, k, opts = {}) {
-    const e = exById[w.ex];
+    const e = placeOf(w);
     if (!w.imgs.length) {
       return `<li class="wcard is-text">
         <span class="wc-steps" aria-hidden="true"><i></i><i></i><i></i></span>
         <span class="wc-title" dir="auto">${esc(w.title)}</span>
         ${opts.artist !== false ? `<a class="wc-artist" href="${url.artist(w.artist)}" dir="ltr">${esc(w.artist)}</a>` : ''}
         <span class="wc-meta" dir="auto">${meta(w)}${w.notes ? ' · ' + esc(w.notes) : ''}</span>
-        ${opts.ex !== false && e ? `<a class="wc-ex" href="${url.ex(e.id)}">${esc(L(e, 'title'))}</a>` : ''}
+        ${opts.ex !== false && e ? `<a class="wc-ex" href="${e.href}">${esc(e.title)}</a>` : ''}
       </li>`;
     }
     const im = w.imgs[0];
@@ -302,7 +306,7 @@
       <span class="wc-title" dir="auto">${esc(w.title)}</span>
       ${opts.artist !== false ? `<a class="wc-artist" href="${url.artist(w.artist)}" dir="ltr">${esc(w.artist)}</a>` : ''}
       <span class="wc-meta" dir="auto">${meta(w)}${w.notes ? ' · ' + esc(w.notes) : ''}</span>
-      ${opts.ex !== false && e ? `<a class="wc-ex" href="${url.ex(e.id)}">${esc(L(e, 'title'))}</a>` : ''}
+      ${opts.ex !== false && e ? `<a class="wc-ex" href="${e.href}">${esc(e.title)}</a>` : ''}
     </li>`;
   }
   // render a works list into a <ul class="masonry">, paged for speed
@@ -782,6 +786,12 @@
           </div>
         </section>`;
       }).join('')}
+      ${PROJECTS.filter(p => works.some(w => w.ex === p.id)).map(p => `<section class="section tight artist-show">
+          <div class="wrap">
+            <div class="bar reveal"><h2 class="h-sec"><a href="${url.project(p.id)}">${esc(L(p, 'title'))}</a> <span>${esc(L(p, 'dates'))}</span></h2></div>
+            <ul class="masonry" data-ex="${p.id}"></ul>
+          </div>
+        </section>`).join('')}
       <nav class="pager" aria-label="${T.artists}">
         <div class="wrap">
           ${prev ? `<a class="pg prev" href="${url.artist(prev.name)}"><span class="pg-k">${T.prevArtist}</span><span class="pg-t" dir="ltr">${esc(prev.name)}</span></a>` : '<span></span>'}
@@ -801,34 +811,44 @@
       sample: 'غرفة تجريبية', upload: 'أضف صورة جدارك', change: 'غيّر الصورة',
       lineIs: 'طول الخط البرتقالي', cm: 'سم', adjust: 'اضبط الخط', done: 'تم',
       wallIs: 'عرض الصورة يقارب', m: 'م', pick: 'اختر عملًا', allEx: 'كل المعارض', search: 'ابحث بالفنان أو العنوان',
-      width: 'العرض', height: 'الارتفاع', swap: 'تبديل', frame: 'الإطار', none: 'بدون', black: 'أسود', white: 'أبيض', oak: 'خشب',
+      width: 'العرض', height: 'الارتفاع', swap: 'تبديل', frame: 'إطار', none: 'بدون',
       mat: 'حافة بيضاء (Passe-partout)', light: 'الإضاءة', download: 'حمّل الصورة', share: 'شارك', request: 'اطلب الشراء',
       name: 'الاسم', country: 'الدولة والمدينة', notes: 'ملاحظات (اختياري)', send: 'أرسل الطلب بالبريد',
       avail: 'اسأل عن التوفر', reqNote: 'نؤكد السعر والتوفر والشحن إلى أي مكان في العالم عبر البريد. أرفق الصورة التي حمّلتها لنرى مساحتك.',
       choose: 'اختر عملًا من القائمة', drag: 'اسحب العمل لتحريكه', measureHint: 'اسحب طرفي الخط البرتقالي فوق شيء تعرف مقاسه، ثم اكتب طوله.',
       tips: 'أمثلة: باب ≈ ٨٠–٩٠ سم عرضًا و٢٠٠ سم ارتفاعًا، ورقة A4 = ٢٩٫٧ سم، مفتاح كهرباء ≈ ٨ سم.',
       subject: 'طلب شراء', hello: 'مرحبًا، أودّ شراء هذا العمل:', link: 'الرابط', mySpace: 'سأرفق صورة العمل في مساحتي.',
-      noMatch: 'لا توجد نتائج.', n: 'عملًا'
+      noMatch: 'لا توجد نتائج.', n: 'عملًا',
+      dragMany: 'اسحب أي عمل لتحريكه، واضغط عليه لتضبطه.', onWall: 'الأعمال على الجدار', remove: 'احذف هذا العمل من الجدار', removeOne: 'احذف العمل من الجدار',
+      helloMany: 'مرحبًا، أودّ شراء هذه الأعمال:', noFrame: 'بدون إطار', frames: { black: 'أسود رفيع', white: 'أبيض للمعارض', oak: 'خشب طبيعي' }
     } : {
       sample: 'Try a sample room', upload: 'Add a photo of your wall', change: 'Change photo',
       lineIs: 'The orange line is', cm: 'cm', adjust: 'Adjust the line', done: 'Done',
       wallIs: 'Your photo shows about', m: 'm across', pick: 'Choose an artwork', allEx: 'All exhibitions', search: 'Search by artist or title',
-      width: 'Width', height: 'Height', swap: 'Swap', frame: 'Frame', none: 'None', black: 'Black', white: 'White', oak: 'Oak',
+      width: 'Width', height: 'Height', swap: 'Swap', frame: 'Frame', none: 'None',
       mat: 'White mount', light: 'Light', download: 'Download image', share: 'Share', request: 'Request to purchase',
       name: 'Your name', country: 'Country & city', notes: 'Notes (optional)', send: 'Send request by email',
       avail: 'Ask about availability', reqNote: 'We confirm price, availability and shipping anywhere in the world by email. Attach the image you downloaded so we can see your space.',
       choose: 'Choose an artwork from the list', drag: 'Drag the artwork to move it', measureHint: 'Drag the ends of the orange line onto something you know the size of, then type its length.',
       tips: 'For example: a door is about 80–90 cm wide and 200 cm tall, an A4 sheet is 29.7 cm, a light switch about 8 cm.',
       subject: 'Purchase request', hello: "Hello, I'd like to buy this artwork:", link: 'Link', mySpace: "I'll attach a picture of it in my space.",
-      noMatch: 'Nothing matches that search.', n: 'artworks'
+      noMatch: 'Nothing matches that search.', n: 'artworks',
+      dragMany: 'Drag any piece to move it; tap one to adjust it.', onWall: 'Pieces on your wall', remove: 'Remove this piece from the wall', removeOne: 'Remove the piece from the wall',
+      helloMany: "Hello, I'd like to buy these artworks:", noFrame: 'No frame', frames: { black: 'Slim black', white: 'Gallery white', oak: 'Natural oak' }
     };
     const pool = ALL.filter(dims);
     const cv = $('#stage'), ctx = cv.getContext('2d');
     const st = {
       room: null, sample: true, rw: 1600, rh: 1000, line: { x1: 450, y1: 760, x2: 1150, y2: 760 }, lineCm: 175,
-      work: null, img: null, wcm: 0, hcm: 0, x: 800, y: 330, frame: 'black', mat: false, light: 1, measure: false
+      items: [], sel: -1, light: 1, measure: false
     };
-    const FRAME = { none: null, black: '#151515', white: '#f4f4f2', oak: '#b88a57' };
+    // three frame styles, each drawn with its own colour and bevel; the width is set per piece in cm
+    const FRAME = {
+      black: { base: '#161616', hi: '#3a3a3a', lo: '#000', inner: '#000' },
+      white: { base: '#f3f2ee', hi: '#ffffff', lo: '#d6d3cc', inner: '#c9c5bc' },
+      oak: { base: '#b8895a', hi: '#d4a877', lo: '#8a6239', inner: '#6e4c2b', grain: true }
+    };
+    const cur = () => st.items[st.sel];
     const pxPerCm = () => Math.hypot(st.line.x2 - st.line.x1, st.line.y2 - st.line.y1) / Math.max(1, st.lineCm);
 
     // sample room, drawn rather than photographed: 1600×1000 px = 400 cm of wall
@@ -858,29 +878,51 @@
       cv.width = Math.round(st.rw * view * dpr); cv.height = Math.round(st.rh * view * dpr);
       draw();
     }
-    // the artwork rectangle (with frame and mat) in room pixels
-    function workRect() {
-      const k = pxPerCm(), f = st.frame === 'none' ? 0 : 3, m = st.mat ? 7 : 0;
-      const w = (st.wcm + 2 * (f + m)) * k, h = (st.hcm + 2 * (f + m)) * k;
-      return { x: st.x - w / 2, y: st.y - h / 2, w, h, f: f * k, m: m * k };
+    // a piece's rectangle (with frame and mount) in room pixels
+    function rectOf(it) {
+      const k = pxPerCm(), f = it.frame === 'none' ? 0 : it.fw, m = it.mat ? 7 : 0;
+      const w = (it.wcm + 2 * (f + m)) * k, h = (it.hcm + 2 * (f + m)) * k;
+      return { x: it.x - w / 2, y: it.y - h / 2, w, h, f: f * k, m: m * k };
+    }
+    function paintFrame(c, r, fr) {
+      const { x, y, w, h, f } = r;
+      c.fillStyle = fr.base; c.fillRect(x, y, w, h);
+      if (fr.grain) {
+        c.save(); c.globalAlpha = .18; c.strokeStyle = fr.lo; c.lineWidth = Math.max(.6, f * .05);
+        for (let k = 1; k < 6; k++) { const o = f * k / 6; c.strokeRect(x + o, y + o, w - 2 * o, h - 2 * o); }
+        c.restore();
+      }
+      // bevel: light from the top left
+      const b = Math.min(f * .35, 18);
+      c.fillStyle = fr.hi; c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y); c.lineTo(x + w - b, y + b); c.lineTo(x + b, y + b); c.lineTo(x + b, y + h - b); c.lineTo(x, y + h); c.fill();
+      c.fillStyle = fr.lo; c.beginPath(); c.moveTo(x + w, y); c.lineTo(x + w, y + h); c.lineTo(x, y + h); c.lineTo(x + b, y + h - b); c.lineTo(x + w - b, y + h - b); c.lineTo(x + w - b, y + b); c.fill();
+      c.fillStyle = fr.base; c.fillRect(x + b, y + b, w - 2 * b, h - 2 * b);
+      c.strokeStyle = fr.inner; c.lineWidth = Math.max(1, f * .06); c.strokeRect(x + f, y + f, w - 2 * f, h - 2 * f);
+    }
+    function paintItem(c, it) {
+      const r = rectOf(it);
+      c.save();
+      c.shadowColor = 'rgba(0,0,0,.35)'; c.shadowBlur = r.w * .04; c.shadowOffsetX = r.w * .012; c.shadowOffsetY = r.w * .02;
+      c.fillStyle = it.frame === 'none' ? '#000' : FRAME[it.frame].base; c.fillRect(r.x, r.y, r.w, r.h);
+      c.restore();
+      if (it.frame !== 'none') paintFrame(c, r, FRAME[it.frame]);
+      if (it.mat) { c.fillStyle = '#fbfaf7'; c.fillRect(r.x + r.f, r.y + r.f, r.w - 2 * r.f, r.h - 2 * r.f); }
+      const ix = r.x + r.f + r.m, iy = r.y + r.f + r.m, iw = r.w - 2 * (r.f + r.m), ih = r.h - 2 * (r.f + r.m);
+      if (it.img) {
+        c.save(); c.filter = `brightness(${st.light})`;
+        // cover-fit the photo into the artwork's real proportions
+        const s = Math.max(iw / it.img.naturalWidth, ih / it.img.naturalHeight), sw = iw / s, sh = ih / s;
+        c.drawImage(it.img, (it.img.naturalWidth - sw) / 2, (it.img.naturalHeight - sh) / 2, sw, sh, ix, iy, iw, ih);
+        c.restore();
+      }
+      return r;
     }
     function paint(c, handles) {
       if (st.sample) drawSample(c); else c.drawImage(st.room, 0, 0, st.rw, st.rh);
-      if (st.img) {
-        const r = workRect();
-        c.save();
-        c.shadowColor = 'rgba(0,0,0,.35)'; c.shadowBlur = r.w * .04; c.shadowOffsetX = r.w * .012; c.shadowOffsetY = r.w * .02;
-        c.fillStyle = FRAME[st.frame] || '#000'; c.fillRect(r.x, r.y, r.w, r.h);
-        c.restore();
-        if (st.mat) { c.fillStyle = '#fbfaf7'; c.fillRect(r.x + r.f, r.y + r.f, r.w - 2 * r.f, r.h - 2 * r.f); }
-        const ix = r.x + r.f + r.m, iy = r.y + r.f + r.m, iw = r.w - 2 * (r.f + r.m), ih = r.h - 2 * (r.f + r.m);
-        c.save(); c.filter = `brightness(${st.light})`;
-        // cover-fit the photo into the artwork's real proportions
-        const s = Math.max(iw / st.img.naturalWidth, ih / st.img.naturalHeight), sw = iw / s, sh = ih / s;
-        c.drawImage(st.img, (st.img.naturalWidth - sw) / 2, (st.img.naturalHeight - sh) / 2, sw, sh, ix, iy, iw, ih);
-        c.restore();
-        if (handles && !st.measure) { c.strokeStyle = 'rgba(226,129,23,.9)'; c.lineWidth = 2 / view; c.setLineDash([8 / view, 6 / view]); c.strokeRect(r.x - 6 / view, r.y - 6 / view, r.w + 12 / view, r.h + 12 / view); c.setLineDash([]); }
-      }
+      st.items.forEach((it, k) => {
+        const r = paintItem(c, it);
+        if (handles && !st.measure && k === st.sel) { c.strokeStyle = 'rgba(226,129,23,.9)'; c.lineWidth = 2 / view; c.setLineDash([8 / view, 6 / view]); c.strokeRect(r.x - 6 / view, r.y - 6 / view, r.w + 12 / view, r.h + 12 / view); c.setLineDash([]); }
+      });
       if (handles && st.measure) {
         const { x1, y1, x2, y2 } = st.line;
         c.strokeStyle = '#E28117'; c.lineWidth = 4 / view; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke();
@@ -895,32 +937,34 @@
       ctx.clearRect(0, 0, st.rw, st.rh);
       paint(ctx, true);
       $('#wall-size').textContent = `${S.wallIs} ${num((st.rw / pxPerCm() / 100).toFixed(1))} ${S.m}`;
-      $('#stage-hint').textContent = st.measure ? S.measureHint : st.work ? S.drag : S.choose;
+      $('#stage-hint').textContent = st.measure ? S.measureHint : st.items.length > 1 ? S.dragMany : st.items.length ? S.drag : S.choose;
     }
 
-    // pointer: drag line handles in measure mode, drag the artwork otherwise
+    // pointer: drag line handles in measure mode; otherwise pick and drag the piece under the pointer
     let drag = null;
     const pt = e => { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) / view, y: (e.clientY - r.top) / view }; };
+    const hit = (p, tol = 0) => { for (let k = st.items.length - 1; k >= 0; k--) { const r = rectOf(st.items[k]); if (p.x > r.x - tol && p.x < r.x + r.w + tol && p.y > r.y - tol && p.y < r.y + r.h + tol) return k; } return -1; };
     cv.addEventListener('pointerdown', e => {
       const p = pt(e), tol = 26 / view;
       if (st.measure) {
         if (Math.hypot(p.x - st.line.x1, p.y - st.line.y1) < tol) drag = { h: 1 };
         else if (Math.hypot(p.x - st.line.x2, p.y - st.line.y2) < tol) drag = { h: 2 };
         else drag = { h: 0, ox: p.x, oy: p.y, l: { ...st.line } };
-      } else if (st.img) {
-        const r = workRect();
-        if (p.x > r.x - tol && p.x < r.x + r.w + tol && p.y > r.y - tol && p.y < r.y + r.h + tol) drag = { w: 1, dx: p.x - st.x, dy: p.y - st.y };
+      } else {
+        let k = hit(p); if (k < 0 && st.sel >= 0 && hit(p, tol) === st.sel) k = st.sel;
+        if (k >= 0) {
+          // bring the touched piece to the front and make it the one being tuned
+          const it = st.items.splice(k, 1)[0]; st.items.push(it); setSel(st.items.length - 1);
+          drag = { w: 1, dx: p.x - it.x, dy: p.y - it.y };
+        }
       }
       if (drag) { cv.setPointerCapture(e.pointerId); e.preventDefault(); }
     });
     cv.addEventListener('pointermove', e => {
       const p = pt(e);
-      if (!drag) {
-        if (!st.measure && st.img) { const r = workRect(); cv.style.cursor = p.x > r.x && p.x < r.x + r.w && p.y > r.y && p.y < r.y + r.h ? 'grab' : 'default'; }
-        return;
-      }
+      if (!drag) { if (!st.measure) cv.style.cursor = hit(p) >= 0 ? 'grab' : 'default'; return; }
       const cl = (v, max) => Math.max(0, Math.min(max, v));
-      if (drag.w) { st.x = cl(p.x - drag.dx, st.rw); st.y = cl(p.y - drag.dy, st.rh); }
+      if (drag.w) { const it = cur(); it.x = cl(p.x - drag.dx, st.rw); it.y = cl(p.y - drag.dy, st.rh); }
       else if (drag.h === 1) { st.line.x1 = cl(p.x, st.rw); st.line.y1 = cl(p.y, st.rh); }
       else if (drag.h === 2) { st.line.x2 = cl(p.x, st.rw); st.line.y2 = cl(p.y, st.rh); }
       else { const dx = p.x - drag.ox, dy = p.y - drag.oy; Object.assign(st.line, { x1: drag.l.x1 + dx, y1: drag.l.y1 + dy, x2: drag.l.x2 + dx, y2: drag.l.y2 + dy }); }
@@ -938,9 +982,10 @@
         const c = document.createElement('canvas'); c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
         c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
         URL.revokeObjectURL(im.src);
+        const sx = c.width / st.rw, sy = c.height / st.rh;
+        st.items.forEach(it => { it.x *= sx; it.y *= sy; });
         Object.assign(st, { room: c, sample: false, rw: c.width, rh: c.height, lineCm: 100 });
         st.line = { x1: c.width * .3, y1: c.height * .62, x2: c.width * .7, y2: c.height * .62 };
-        st.x = c.width / 2; st.y = c.height * .38;
         $('#line-cm').value = 100;
         setMeasure(true); $('#room-label').textContent = S.change; fit();
         $('#step-scale').scrollIntoView({ block: 'nearest', behavior: REDUCED ? 'auto' : 'smooth' });
@@ -948,7 +993,9 @@
       im.src = URL.createObjectURL(f);
     });
     $('#use-sample').onclick = () => {
-      Object.assign(st, { room: null, sample: true, rw: 1600, rh: 1000, line: { x1: 450, y1: 760, x2: 1150, y2: 760 }, lineCm: 175, x: 800, y: 330 });
+      const sx = 1600 / st.rw, sy = 1000 / st.rh;
+      st.items.forEach(it => { it.x *= sx; it.y *= sy; });
+      Object.assign(st, { room: null, sample: true, rw: 1600, rh: 1000, line: { x1: 450, y1: 760, x2: 1150, y2: 760 }, lineCm: 175 });
       $('#line-cm').value = 175; setMeasure(false); fit();
     };
     // step 2: scale
@@ -956,40 +1003,76 @@
     $('#measure-btn').onclick = () => setMeasure(!st.measure);
     $('#line-cm').addEventListener('input', e => { const v = parseFloat(e.target.value); if (v > 0) { st.lineCm = v; draw(); } });
 
-    // step 3: pick
+    // step 3: pick — each tap adds a piece (or selects it if it is already on the wall)
     const grid = $('#pick-grid'), exSel = $('#pick-ex'), q = $('#pick-q');
     exSel.innerHTML = `<option value="">${S.allEx}</option>` + [...EX].reverse().filter(e => pool.some(w => w.ex === e.id)).map(e => `<option value="${e.id}">${esc(L(e, 'title'))}</option>`).join('');
+    const idOf = w => `${w.ex}.${w.i}`;
+    const onWall = id => st.items.findIndex(it => idOf(it.w) === id);
     function list() {
       const s = q.value.trim().toLowerCase();
       const items = pool.filter(w => (!exSel.value || w.ex === exSel.value) && (!s || (w.artist + ' ' + w.title).toLowerCase().includes(s)));
-      grid.innerHTML = items.map(w => `<li><button type="button" data-w="${w.ex}.${w.i}" aria-pressed="${st.work === w}" title="${esc(w.title)} — ${esc(w.artist)}">
+      grid.innerHTML = items.map(w => `<li><button type="button" data-w="${idOf(w)}" aria-pressed="${onWall(idOf(w)) >= 0}" title="${esc(w.title)} — ${esc(w.artist)}">
         <img src="${workSrc(w.imgs[0].f, true)}" alt="${esc(w.title)}, ${esc(w.artist)}" loading="lazy"><span>${esc(w.artist)}</span></button></li>`).join('') || `<li class="empty">${S.noMatch}</li>`;
       $('#pick-count').textContent = `${num(items.length)} ${S.n}`;
     }
     exSel.onchange = list; let qt; q.oninput = () => { clearTimeout(qt); qt = setTimeout(list, 120); };
-    grid.onclick = e => { const b = e.target.closest('[data-w]'); if (b) select(b.dataset.w); };
-    function select(id, keepPos) {
+    grid.onclick = e => { const b = e.target.closest('[data-w]'); if (b) add(b.dataset.w); };
+    function add(id, opts = {}) {
+      const have = onWall(id); if (have >= 0) { setSel(have); return; }
       const [ex, i] = id.split('.'); const w = pool.find(x => x.ex === ex && x.i === +i); if (!w) return;
-      const d = dims(w); st.work = w; st.wcm = d.w; st.hcm = d.h;
-      $('#w-cm').value = d.w; $('#h-cm').value = d.h;
-      const im = new Image(); im.onload = () => { st.img = im; setMeasure(false); draw(); }; im.src = workSrc(w.imgs[0].f);
-      const e = exById[w.ex];
-      $('#picked').innerHTML = `<a href="${url.artist(w.artist)}" dir="ltr">${esc(w.artist)}</a><span class="t" dir="auto">${esc(w.title)}</span>
-        <span class="m" dir="auto">${meta(w)}</span>${e ? `<a class="x" href="${url.ex(e.id)}">${esc(L(e, 'title'))}</a>` : ''}<span class="av">${S.avail}</span>`;
-      $$('[data-w]', grid).forEach(b => b.setAttribute('aria-pressed', b.dataset.w === id));
-      $('#tune').hidden = false; $('#buy').hidden = false;
-      history.replaceState(null, '', `?w=${id}`);
+      const d = dims(w), prev = cur(), k = pxPerCm();
+      // place a new piece beside the last one, so pieces don't land on top of each other
+      let x = st.rw / 2, y = st.sample ? 330 : st.rh * .38;
+      if (prev) { const r = rectOf(prev); x = r.x + r.w + (d.w / 2 + 15 + (prev.fw || 3)) * k; y = prev.y; if (x + d.w / 2 * k > st.rw * .97) {
+        // no room on the right: go left of the leftmost piece, or start a new row higher up
+        const left = Math.min(...st.items.map(o => rectOf(o).x));
+        x = left - (d.w / 2 + 15 + (prev.fw || 3)) * k;
+        if (x - d.w / 2 * k < st.rw * .03) { x = st.rw / 2; y = Math.max(d.h / 2 * k + 20, r.y - (d.h / 2 + 15) * k); }
+      } }
+      const it = { w, img: null, wcm: d.w, hcm: d.h, x, y, frame: prev ? prev.frame : 'black', fw: prev ? prev.fw : 3, mat: prev ? prev.mat : false };
+      st.items.push(it); setSel(st.items.length - 1);
+      const im = new Image(); im.onload = () => { it.img = im; if (!opts.quiet) setMeasure(false); draw(); }; im.src = workSrc(w.imgs[0].f);
+      list(); syncUrl();
     }
-    // step 4: tune
+    function remove(k) {
+      st.items.splice(k, 1); setSel(Math.min(k, st.items.length - 1)); list(); syncUrl();
+    }
+    const syncUrl = () => history.replaceState(null, '', st.items.length ? `?w=${st.items.map(it => idOf(it.w)).join(',')}` : location.pathname);
+    // the selected piece's details, plus a row of every piece on the wall
+    function setSel(k) {
+      st.sel = k; const it = cur();
+      $('#tune').hidden = !it; $('#buy').hidden = !st.items.length;
+      if (it) {
+        $('#w-cm').value = it.wcm; $('#h-cm').value = it.hcm; $('#mat').checked = it.mat;
+        $('#fw').value = it.fw; $('#fw-out').textContent = `${num(it.fw)} ${S.cm}`; $('#fw').disabled = it.frame === 'none';
+        $$('[data-frame]').forEach(x => x.setAttribute('aria-pressed', x.dataset.frame === it.frame));
+      }
+      const many = st.items.length > 1;
+      $('#picked').innerHTML = !it ? '' : `
+        ${many ? `<div class="on-wall" role="list" aria-label="${S.onWall}">${st.items.map((x, j) => `<span class="ow${j === k ? ' on' : ''}" role="listitem"><button type="button" data-sel="${j}" aria-pressed="${j === k}" title="${esc(x.w.title)} — ${esc(x.w.artist)}"><img src="${workSrc(x.w.imgs[0].f, true)}" alt="${esc(x.w.title)}"></button><button type="button" class="rm" data-rm="${j}" aria-label="${S.remove}: ${esc(x.w.title)}">×</button></span>`).join('')}</div>` : ''}
+        <a href="${url.artist(it.w.artist)}" dir="ltr">${esc(it.w.artist)}</a><span class="t" dir="auto">${esc(it.w.title)}</span>
+        <span class="m" dir="auto">${meta(it.w)}</span>${placeOf(it.w) ? `<a class="x" href="${placeOf(it.w).href}">${esc(placeOf(it.w).title)}</a>` : ''}<span class="av">${S.avail}</span>`;
+      $('#remove').textContent = many ? S.remove : S.removeOne;
+      draw();
+    }
+    $('#picked').onclick = e => {
+      const s = e.target.closest('[data-sel]'), r = e.target.closest('[data-rm]');
+      if (r) remove(+r.dataset.rm); else if (s) setSel(+s.dataset.sel);
+    };
+    // step 4: tune the selected piece
     const num2 = v => Math.max(1, parseFloat(v) || 1);
-    $('#w-cm').oninput = e => { st.wcm = num2(e.target.value); draw(); };
-    $('#h-cm').oninput = e => { st.hcm = num2(e.target.value); draw(); };
-    $('#swap').onclick = () => { [st.wcm, st.hcm] = [st.hcm, st.wcm]; $('#w-cm').value = st.wcm; $('#h-cm').value = st.hcm; draw(); };
-    $('#frames').onclick = e => { const b = e.target.closest('[data-frame]'); if (!b) return; st.frame = b.dataset.frame; $$('[data-frame]').forEach(x => x.setAttribute('aria-pressed', x === b)); draw(); };
-    $('#mat').onchange = e => { st.mat = e.target.checked; draw(); };
+    $('#w-cm').oninput = e => { if (cur()) { cur().wcm = num2(e.target.value); draw(); } };
+    $('#h-cm').oninput = e => { if (cur()) { cur().hcm = num2(e.target.value); draw(); } };
+    $('#swap').onclick = () => { const it = cur(); if (!it) return; [it.wcm, it.hcm] = [it.hcm, it.wcm]; $('#w-cm').value = it.wcm; $('#h-cm').value = it.hcm; draw(); };
+    $('#frames').onclick = e => { const b = e.target.closest('[data-frame]'); if (!b || !cur()) return; cur().frame = b.dataset.frame; setSel(st.sel); };
+    $('#fw').oninput = e => { const it = cur(); if (!it) return; it.fw = +e.target.value; $('#fw-out').textContent = `${num(it.fw)} ${S.cm}`; draw(); };
+    $('#mat').onchange = e => { if (cur()) { cur().mat = e.target.checked; draw(); } };
     $('#light').oninput = e => { st.light = +e.target.value; draw(); };
+    $('#remove').onclick = () => { if (st.sel >= 0) remove(st.sel); };
 
     // step 5: snapshot, share, request
+    const titleLine = () => st.items.length === 1 ? `${st.items[0].w.title} — ${st.items[0].w.artist} · ${num(st.items[0].wcm)}×${num(st.items[0].hcm)} ${S.cm}`
+      : `${num(st.items.length)} ${S.n}: ${st.items.map(it => `${it.w.title} — ${it.w.artist}`).join(' · ')}`;
     function snapshot() {
       const c = document.createElement('canvas'), bar = Math.round(st.rw * .045);
       c.width = st.rw; c.height = st.rh + bar;
@@ -997,11 +1080,14 @@
       x.fillStyle = '#000'; x.fillRect(0, st.rh, st.rw, bar);
       x.font = `${Math.round(bar * .38)}px Urbanist, sans-serif`; x.textBaseline = 'middle';
       x.fillStyle = '#F2F2F2'; x.textAlign = 'left';
-      x.fillText(st.work ? `${st.work.title} — ${st.work.artist} · ${num(st.wcm)}×${num(st.hcm)} ${S.cm}` : '', bar * .4, st.rh + bar / 2);
+      let t = st.items.length ? titleLine() : ''; const max = st.rw * .72;
+      while (t.length > 4 && x.measureText(t).width > max) t = t.slice(0, -2);
+      if (st.items.length && t !== titleLine()) t += '…';
+      x.fillText(t, bar * .4, st.rh + bar / 2);
       x.fillStyle = '#E28117'; x.textAlign = 'right'; x.fillText('theartgallery.world', st.rw - bar * .4, st.rh + bar / 2);
       return new Promise(res => c.toBlob(res, 'image/jpeg', .9));
     }
-    const fname = () => `the-art-gallery-${st.work ? slug(st.work.artist + ' ' + st.work.title) : 'space'}.jpg`;
+    const fname = () => `the-art-gallery-${st.items.length === 1 ? slug(st.items[0].w.artist + ' ' + st.items[0].w.title) : 'my-wall'}.jpg`;
     $('#dl').onclick = async () => {
       const b = await snapshot(), a = document.createElement('a');
       a.href = URL.createObjectURL(b); a.download = fname(); a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
@@ -1010,21 +1096,22 @@
     shareBtn.hidden = !(navigator.canShare && navigator.canShare({ files: [new File([''], 'x.jpg', { type: 'image/jpeg' })] }));
     shareBtn.onclick = async () => {
       const f = new File([await snapshot()], fname(), { type: 'image/jpeg' });
-      try { await navigator.share({ files: [f], title: 'the ART GALLERY', text: st.work ? `${st.work.title} — ${st.work.artist}\n${location.href}` : location.href }); } catch (e) { /* cancelled */ }
+      try { await navigator.share({ files: [f], title: 'the ART GALLERY', text: `${st.items.length ? titleLine() : ''}\n${location.href}` }); } catch (e) { /* cancelled */ }
     };
     $('#req-toggle').onclick = () => { const f = $('#req'); f.hidden = !f.hidden; if (!f.hidden) $('#req-name').focus(); };
     $('#req').onsubmit = e => {
-      e.preventDefault(); const w = st.work; if (!w) return;
-      const ex = exById[w.ex];
-      const body = [S.hello, '', `${w.title} — ${w.artist}`, `${fmtSize(w.size)}${w.medium ? ' · ' + w.medium : ''}`, ex ? `${L(ex, 'title')} (${ex.year})` : '',
-        `${S.link}: ${new URL(url.space(w), location.href).href}`, '', `${S.name}: ${$('#req-name').value}`, `${S.country}: ${$('#req-country').value}`,
-        $('#req-notes').value ? `\n${$('#req-notes').value}` : '', '', S.mySpace].filter(x => x !== undefined).join('\n');
-      location.href = `mailto:info@theartgallery.world?subject=${encodeURIComponent(`${S.subject}: ${w.title} — ${w.artist}`)}&body=${encodeURIComponent(body)}`;
+      e.preventDefault(); if (!st.items.length) return;
+      const fr = it => it.frame === 'none' ? S.noFrame : `${S.frames[it.frame]} ${S.frame.toLowerCase()}, ${num(it.fw)} ${S.cm}${it.mat ? ' + ' + S.mat.toLowerCase() : ''}`;
+      const pieces = st.items.map((it, k) => { const ex = placeOf(it.w); return [`${num(k + 1)}. ${it.w.title} — ${it.w.artist}`, `   ${fmtSize(it.w.size)}${it.w.medium ? ' · ' + it.w.medium : ''}${ex ? ` · ${ex.title} (${ex.year})` : ''}`, `   ${fr(it)}`, `   ${S.link}: ${new URL(url.space(it.w), location.href).href}`].join('\n'); });
+      const body = [st.items.length > 1 ? S.helloMany : S.hello, '', ...pieces, '', `${S.name}: ${$('#req-name').value}`, `${S.country}: ${$('#req-country').value}`,
+        $('#req-notes').value ? `\n${$('#req-notes').value}` : '', '', S.mySpace].join('\n');
+      const subj = st.items.length > 1 ? `${S.subject}: ${num(st.items.length)} ${S.n}` : `${S.subject}: ${st.items[0].w.title} — ${st.items[0].w.artist}`;
+      location.href = `mailto:info@theartgallery.world?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
     };
 
     addEventListener('resize', () => { clearTimeout(fit.t); fit.t = setTimeout(fit, 100); });
     list(); fit();
-    const want = params.get('w'); if (want) select(want);
+    const want = params.get('w'); if (want) want.split(',').forEach(id => add(id, { quiet: true }));
   };
 
   // ---------- Curation project

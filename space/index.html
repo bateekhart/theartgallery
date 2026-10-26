@@ -69,6 +69,7 @@
             <label class="search"><span class="visually-hidden">Search</span><input id="pick-q" type="search" placeholder="Search by artist or title" autocomplete="off"></label>
           </div>
           <ul class="pick-grid" id="pick-grid"></ul>
+          <p class="small">Tap a piece to add it to your wall. Add as many as you like, then tap one on the wall to adjust it.</p>
         </section>
 
         <section class="step" id="tune" hidden>
@@ -81,13 +82,19 @@
           <div class="row chips" id="frames" role="group" aria-label="Frame">
             <span class="lbl">Frame</span>
             <button type="button" data-frame="none" aria-pressed="false">None</button>
-            <button type="button" data-frame="black" aria-pressed="true">Black</button>
-            <button type="button" data-frame="white" aria-pressed="false">White</button>
-            <button type="button" data-frame="oak" aria-pressed="false">Oak</button>
+            <button type="button" data-frame="black" aria-pressed="true">Slim black</button>
+            <button type="button" data-frame="white" aria-pressed="false">Gallery white</button>
+            <button type="button" data-frame="oak" aria-pressed="false">Natural oak</button>
+          </div>
+          <div class="row">
+            <label class="field range">Frame width <input id="fw" type="range" min="1" max="10" step=".5" value="3"> <output id="fw-out">3 cm</output></label>
           </div>
           <div class="row">
             <label class="check"><input id="mat" type="checkbox"> White mount</label>
             <label class="field range">Light <input id="light" type="range" min=".6" max="1.15" step=".01" value="1"></label>
+          </div>
+          <div class="row">
+            <button class="btn ghost small-btn" id="remove" type="button">Remove this piece from the wall</button>
           </div>
         </section>
 

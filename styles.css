@@ -686,6 +686,15 @@ html, body { overflow-x: clip; }
 .picked .m { font-size: 13px; color: var(--muted); }
 .picked .x { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .picked .av { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--orange); border: 1px solid var(--orange); padding: 1px 7px; }
+.picked .on-wall { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
+.picked .ow { position: relative; display: inline-flex; }
+.picked .ow button[data-sel] { width: 54px; height: 54px; padding: 0; border: 2px solid var(--line); background: #e6e6e6; cursor: pointer; }
+.picked .ow.on button[data-sel] { border-color: var(--orange); }
+.picked .ow img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.picked .ow .rm { position: absolute; top: -8px; inset-inline-end: -8px; width: 22px; height: 22px; border-radius: 50%; border: 0; background: var(--ink); color: var(--wall); font-size: 14px; line-height: 1; cursor: pointer; }
+.picked .ow .rm:hover { background: var(--orange); color: var(--ink); }
+.field output { min-width: 3.2em; font-variant-numeric: tabular-nums; color: var(--muted); }
+.field input:disabled { opacity: .4; }
 :lang(ar) .picked .x, :lang(ar) .picked .av { letter-spacing: 0; font-size: 14px; }
 .panel { display: grid; gap: 0; }
 .step { border-top: 1px solid var(--ink); padding: 18px 0 24px; }

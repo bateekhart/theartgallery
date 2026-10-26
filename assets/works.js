@@ -4,6 +4,12 @@
    Views: installation photos per exhibition in assets/img/views/. */
 
 window.WORKS = {
+"marina-terrace":[
+["Rana Khalil","Untitled","40x60","2025","Photography print, 1/1","One of a series of 4",[["marina-terrace--rana-khalil--tower-1",1280,1600]]],
+["Rana Khalil","Untitled","40x60","2025","Photography print, 1/1","One of a series of 4",[["marina-terrace--rana-khalil--tower-2",1280,1600]]],
+["Rana Khalil","Untitled","40x60","2025","Photography print, 1/1","One of a series of 4",[["marina-terrace--rana-khalil--tower-3",1200,1600]]],
+["Rana Khalil","Untitled","40x60","2025","Photography print, 1/1","One of a series of 4",[["marina-terrace--rana-khalil--tower-4",1280,1600]]],
+["Rana Khalil","Untitled","120x80","2025","Mixed media on canvas","",[["marina-terrace--rana-khalil--mixed-media",1500,1000]]]],
 "memory":[
 ["Abeer Adel","Life and livelihood","30.5x34","","Linocut print","One of a series of 3",[["memory--abeer-adel--life-and-livelihood-0-0",799,976]]],
 ["Abeer Adel","Life and livelihood","30.5x34","","Linocut print","One of a series of 3",[["memory--abeer-adel--life-and-livelihood-0-1",843,983]]],
