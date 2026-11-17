@@ -384,7 +384,8 @@
   $$('[data-count]').forEach(el => {
     const k = el.dataset.count; if (!(k in stats)) return;
     el.dataset.to = stats[k]; el.textContent = num(stats[k]) + (el.dataset.suffix || '');
-    if (el.dataset.animate !== undefined) { el.textContent = num(0); counted.observe(el); }
+    // the real number shows by default; it only counts up from zero once it scrolls into view
+    if (el.dataset.animate !== undefined) counted.observe(el);
   });
 
   // ---------- Exhibition card (used by home carousel and exhibitions page)
@@ -439,6 +440,7 @@
         <div class="car-ctrl">
           <div class="car-dots" role="tablist">${list.map((e, i) => `<button type="button" role="tab" aria-label="${esc(L(e, 'title'))}" data-i="${i}"><i></i></button>`).join('')}</div>
           <div class="car-btns">
+            <span class="car-count" aria-hidden="true"><b>${num(1)}</b> / ${num(list.length)}</span>
             <button class="car-play" type="button" aria-label="${T.pause}"><span class="i-pause" aria-hidden="true"></span></button>
             <button class="car-prev" type="button" aria-label="${T.prev}">${AR ? '→' : '←'}</button>
             <button class="car-next" type="button" aria-label="${T.next}">${AR ? '←' : '→'}</button>
@@ -457,6 +459,7 @@
         dots.forEach((d, i) => { d.setAttribute('aria-selected', i === at); d.classList.remove('run'); });
         if (playing) { void dots[at].offsetWidth; dots[at].classList.add('run'); }
         slides.forEach((s, i) => s.classList.toggle('is-active', i === at));
+        $('.car-count b', car).textContent = num(at + 1);
       };
       const play = () => { clearInterval(timer); if (playing) timer = setInterval(() => go(at + 1), DUR); mark(); };
       const setPlaying = p => {

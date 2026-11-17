@@ -116,8 +116,8 @@ window.EXHIBITIONS = [
     partner: "A collaboration with Art Routes", partnerAr: "بالتعاون مع Art Routes",
     curators: "Curated by Sherine Abdelbaki", curatorsAr: "تنسيق شيرين عبد الباقي",
     image: "assets/img/ex/08-discoveries.jpg", imageSize: [1080, 1080],
-    blurb: "Let your imagination flow through a world of creativity inspired by the beauty and emotions in fifty-two colourful artworks by twenty participating artists.",
-    blurbAr: "أطلق العنان لخيالك في عالم من الإبداع مستوحى من الجمال والمشاعر في اثنين وخمسين عملًا فنيًا ملوّنًا لعشرين فنانًا مشاركًا.",
+    blurb: "Let your imagination flow through a world of creativity inspired by the beauty and emotions in fifty-two colourful artworks by nineteen participating artists.",
+    blurbAr: "أطلق العنان لخيالك في عالم من الإبداع مستوحى من الجمال والمشاعر في اثنين وخمسين عملًا فنيًا ملوّنًا لتسعة عشر فنانًا مشاركًا.",
     artists: ["Dina El Messiri", "Haytham Abdelhafeez", "Heba Ali", "Heba Amin", "Hend Kheera", "Khloud Ashraf",
       "Lina Osama", "Marwan Yasser", "Mohamed Abdu", "Mohamed Abouelnaga", "Mohamed Alaa", "Mona Kandeil",
       "Nouran Zayed", "Rana Chalabi", "Saher Hamza", "Sameh Refaat", "Shereen Bahir", "Soraya Refaat", "Weaam Ali"]
